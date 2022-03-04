@@ -5,6 +5,8 @@ import com.hexagrammers.DamPlay.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserManager {
     @Autowired
@@ -23,5 +25,10 @@ public class UserManager {
     public User findById(int id)
     {
         return repository.findById(id);
+    }
+
+    public List<User> findAllUsers()
+    {
+        return (List<User>) repository.findAll();
     }
 }
