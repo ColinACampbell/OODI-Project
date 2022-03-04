@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/asset")
 public class AssetController {
@@ -24,10 +26,29 @@ public class AssetController {
     AssetManager assetManager;
 
     @GetMapping("")
-    public String getAssets(@RequestBody Asset assetBody)
+    public List<Asset> getAssets()
     {
 
-        return "Asset";
+        return assetManager.getAssets();
+    }
+
+    @PutMapping("{id}")
+    public Asset updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody)
+    {
+        Asset asset = assetManager.getAsset(assetBody.getId());
+
+        if (asset == null) {
+            return null; // better response
+        }
+
+        asset.setTitle(assetBody.getTitle());
+        asset.setDescription(assetBody.getDescription());
+        asset.setReviewedBy(assetBody.getReviewedBy());
+
+
+        assetManager.updateAsset(asset);
+
+        return assetBody;
     }
 
     @PostMapping("")
@@ -40,7 +61,7 @@ public class AssetController {
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
         asset.setSender(userDetails.getUser());
 
-        assetManager.createAsset(asset);
+        assetManager.updateAsset(asset);
 
         for (int userId : assetBody.getAssetRecipients())
         {
@@ -53,10 +74,10 @@ public class AssetController {
             assetRecipient.setReceivedAsset(asset);
 
             assetManager.saveRecipient(assetRecipient);
-            //asset.addRecipient(assetRecipient);
+            asset.addRecipient(assetRecipient);
         }
 
-        //assetManager.createAsset(asset);
+        assetManager.updateAsset(asset);
         Asset newAsset = assetManager.getAsset(asset.getId());
 
         return new ResponseEntity<Asset>(newAsset, HttpStatus.CREATED);

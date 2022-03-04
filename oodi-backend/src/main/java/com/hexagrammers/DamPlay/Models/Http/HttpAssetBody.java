@@ -4,19 +4,19 @@ import com.hexagrammers.DamPlay.Models.Asset;
 import java.util.List;
 
 public class HttpAssetBody extends Asset {
-    private List<Integer> recipients;
+    private List<Integer> assetRecipients;
 
     public HttpAssetBody(String title, String description, String assetLink, String reviewedBy,List<Integer> recipients)
     {
         super(title, description, assetLink, reviewedBy);
-        this.recipients = recipients;
+        this.assetRecipients = recipients;
     }
 
     public List<Integer> getAssetRecipients() {
-        return recipients;
+        return assetRecipients;
     }
 
-    public void setRecipients(List<Integer> recipients) {
-        this.recipients = recipients;
+    public void setAssetRecipients(List<Integer> recipients) {
+        this.assetRecipients = recipients;
     }
 }

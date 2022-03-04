@@ -23,12 +23,12 @@ public class Asset {
     @ManyToOne()
     User sender;
 
-    @OneToMany()
+    @OneToMany(mappedBy = "asset")
     List<AssetRecipient> recipients;
 
     public Asset()
     {
-
+        this.recipients = new ArrayList<>();
     }
 
     public Asset(String title, String description,String assetLink, String reviewedBy)
@@ -37,6 +37,24 @@ public class Asset {
         this.description = description;
         this.assetLink = assetLink;
         this.reviewedBy = reviewedBy;
+        this.recipients = new ArrayList<>();
+    }
+
+
+    public void setAssetLink(String assetLink) {
+        this.assetLink = assetLink;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setReviewedBy(String reviewedBy) {
+        this.reviewedBy = reviewedBy;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAssetLink() {
@@ -55,13 +73,14 @@ public class Asset {
         return title;
     }
 
+
     public void addRecipient(AssetRecipient recipient)
     {
-        if ( recipients == null )
-        {
-            recipients = new ArrayList<AssetRecipient>();
-        }
         recipients.add(recipient);
+    }
+
+    public void setRecipients(List<AssetRecipient> recipients) {
+        this.recipients = recipients;
     }
 
     public List<AssetRecipient> getRecipients() {

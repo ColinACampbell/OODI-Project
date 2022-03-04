@@ -7,6 +7,8 @@ import com.hexagrammers.DamPlay.Repositories.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AssetManager {
 
@@ -15,7 +17,7 @@ public class AssetManager {
 
     @Autowired
     private AssetRepository assetRepository;
-    public void createAsset(Asset asset)
+    public void updateAsset(Asset asset)
     {
         assetRepository.save(asset);
     }
@@ -29,5 +31,10 @@ public class AssetManager {
     public Asset getAsset(int id)
     {
         return  assetRepository.findById(id).get();
+    }
+
+    public List<Asset> getAssets()
+    {
+        return (List<Asset>) assetRepository.findAll();
     }
 }

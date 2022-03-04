@@ -1,7 +1,7 @@
 package com.hexagrammers.DamPlay.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,7 +13,7 @@ public class User {
     @GeneratedValue
     private int id;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String username;
     private String email;
@@ -22,7 +22,8 @@ public class User {
     private List<Asset> assets;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
-    private List<AssetRecipient> assetRecipient;
+    private List<AssetRecipient> assetRecipients;
+
 
     public User(String email, String username,String password)
     {
@@ -50,7 +51,6 @@ public class User {
         return email;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -74,4 +74,6 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+
 }

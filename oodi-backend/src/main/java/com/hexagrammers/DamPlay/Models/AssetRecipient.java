@@ -1,5 +1,7 @@
 package com.hexagrammers.DamPlay.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -29,6 +31,7 @@ public class AssetRecipient {
         return id;
     }
 
+    @JsonIgnore
     public Asset getReceivedAsset() {
         return asset;
     }
