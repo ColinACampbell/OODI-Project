@@ -4,7 +4,7 @@ export default {
     async login (info) {
         // fetch post request
         const { email, password } = info;
-        let res =  await fetch("http://localhost:3000/user/authenticate",
+        let res =  await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/user/login`,
             {
                 method: "POST",
                 body: JSON.stringify({
@@ -40,7 +40,9 @@ export default {
             }
         }
 
-        let res = await fetch("http://localhost:3000/user/",
+        console.log(info)
+
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/user`,
             {
                 method: "POST",
                 headers: {

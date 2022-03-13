@@ -1,6 +1,6 @@
 export default{
     async getMeetingAlerts(token){
-        let res = await fetch("http://localhost:3000/meeting-alert/",
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/meeting-alert/`,
         {
             method: "GET",
             headers: {
@@ -18,7 +18,7 @@ export default{
 
     async uploadAlertChanges(token, id, info){
     
-        let res = await fetch(`http://localhost:3000/meeting-alert/${id}`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/meeting-alert/${id}`,
         {
             method: "PUT",
             body: JSON.stringify(info),

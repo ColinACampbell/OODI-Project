@@ -1,6 +1,6 @@
 export default {
     async getNotices(token){
-        let res = await fetch("http://localhost:3000/notice/",
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/notice/`,
         {
             method: "GET",
             headers: {
@@ -17,7 +17,7 @@ export default {
     }, 
     async uploadNoticeChanges(token, id, info){
     
-        let res = await fetch(`http://localhost:3000/notice/${id}`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/notice/${id}`,
         {
             method: "PUT",
             body: JSON.stringify(info),

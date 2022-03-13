@@ -12,8 +12,9 @@ export default {
         return str.replace(/(^|\s)\S/g, letter => letter.toUpperCase())
     },
 
+
     async getAssets(token){
-        let res = await fetch("http://localhost:3000/asset/",
+        let res = await fetch("/asset/",
         {
             method: "GET",
             headers: {
@@ -30,7 +31,7 @@ export default {
     },
 
     async getAsset(token, id){
-        let res = await fetch(`http://localhost:3000/asset/${id}`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/asset/${id}`,
         {
             method: "GET",
             headers: {
@@ -54,7 +55,7 @@ export default {
         }
 
         info.fileData = encodedFile
-        let res = await fetch(`http://localhost:3000/asset/${id}`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/asset/${id}`,
         {
             method: "PUT",
             body: JSON.stringify(info),
@@ -74,7 +75,7 @@ export default {
 
     async postFeedback(feedback, token){
 
-        let res = await fetch("http://localhost:3000/feedback/",
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/feedback/`,
             {
                 method: "POST",
                 body: JSON.stringify(feedback),
@@ -94,7 +95,7 @@ export default {
     },
 
     async getFeedbacks(token){
-        let res = await fetch(`http://localhost:3000/feedback/`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/feedback/`,
         {
             method: "GET",
             headers: {
@@ -112,7 +113,7 @@ export default {
 
     async postFeedbackReply(reply, token, id){
 
-        let res = await fetch(`http://localhost:3000/feedback/${id}/reply`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/feedback/${id}/reply`,
             {
                 method: "POST",
                 body: JSON.stringify(reply),

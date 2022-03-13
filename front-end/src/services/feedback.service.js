@@ -34,7 +34,7 @@ export default {
 
         let token = store.getters.token
 
-        let res = await fetch("http://localhost:3000/asset/",
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/asset/`,
             {
                 method: "POST",
                 body: JSON.stringify(info),
@@ -55,7 +55,7 @@ export default {
     },
     async processNotice(notice, token){
 
-        let res = await fetch("http://localhost:3000/notice/",
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/notice/`,
             {
                 method: "POST",
                 body: JSON.stringify(notice),
