@@ -1,5 +1,6 @@
 package com.hexagrammers.DamPlay.Controllers;
 
+import com.hexagrammers.DamPlay.Models.Http.AuthResponse;
 import com.hexagrammers.DamPlay.Models.Http.HttpResponseBody;
 import com.hexagrammers.DamPlay.Models.PrincipalUserDetails;
 import com.hexagrammers.DamPlay.Models.User;
@@ -59,13 +60,13 @@ public class UserController {
                 PrincipalUserDetails principalUserDetails = new PrincipalUserDetails(user);
                 UsernamePasswordAuthenticationToken authReq
                         = new UsernamePasswordAuthenticationToken(principalUserDetails,userBody.getPassword());
-                Authentication auth = authenticationManager.authenticate(authReq);
+                Authentication auth = authenticationManager.authenticate(authReq); // authenticate the user by passing the token into the authentication layer
 
                 JWTUtil jwtUtil = new JWTUtil();
                 String token = jwtUtil.generateToken(principalUserDetails);
 
                 // Also return the user info as well as the members
-                return new ResponseEntity<>(new HttpResponseBody(token),HttpStatus.OK);
+                return new ResponseEntity<>(new AuthResponse(user,userManager.findAllUsers(),token),HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

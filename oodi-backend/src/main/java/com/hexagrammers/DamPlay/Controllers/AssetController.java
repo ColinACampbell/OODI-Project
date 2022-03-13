@@ -33,12 +33,12 @@ public class AssetController {
     }
 
     @PutMapping("{id}")
-    public Asset updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody)
+    public ResponseEntity<Asset> updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody)
     {
-        Asset asset = assetManager.getAsset(assetBody.getId());
+        Asset asset = assetManager.getAsset(assetId);
 
         if (asset == null) {
-            return null; // better response
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); // better response
         }
 
         asset.setTitle(assetBody.getTitle());
@@ -48,7 +48,7 @@ public class AssetController {
 
         assetManager.updateAsset(asset);
 
-        return assetBody;
+        return new ResponseEntity<>(asset,HttpStatus.OK);
     }
 
     @PostMapping("")
@@ -78,7 +78,7 @@ public class AssetController {
         }
 
         assetManager.updateAsset(asset);
-        Asset newAsset = assetManager.getAsset(asset.getId());
+        Asset newAsset = assetManager.getAsset(asset.getId()); // TODO: Reduce this transaction
 
         return new ResponseEntity<Asset>(newAsset, HttpStatus.CREATED);
     }
