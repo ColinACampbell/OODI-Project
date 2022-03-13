@@ -73,7 +73,8 @@ export default {
                     else{
                         this.$router.push("/")
                     }
-                })
+                }).catch(err => console.log(err))
+
             
             
         }
