@@ -32,6 +32,12 @@ public class AssetController {
         return assetManager.getAssets();
     }
 
+    @GetMapping("{id}")
+    public Asset getAsset(@PathVariable("id") int assetId)
+    {
+        return assetManager.getAsset(assetId);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<Asset> updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody)
     {
