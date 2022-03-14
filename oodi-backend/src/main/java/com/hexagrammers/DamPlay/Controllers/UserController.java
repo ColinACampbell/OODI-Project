@@ -35,6 +35,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
+        System.out.println(user.getName());
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // Encrypt the user password on creation
         userManager.createUser(user);
 
@@ -45,9 +46,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User userBody)
     {
-
-        System.out.println(userBody.getPassword());
-        System.out.println(userBody.getUsername());
 
         User user = userManager.findByEmail(userBody.getEmail());
         if (user == null)

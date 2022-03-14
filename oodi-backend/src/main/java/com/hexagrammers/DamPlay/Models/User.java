@@ -15,7 +15,7 @@ public class User {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private String username;
+    private String name;
     private String email;
 
     @OneToMany(mappedBy = "sender")
@@ -25,16 +25,16 @@ public class User {
     private List<AssetRecipient> assetRecipients;
 
 
-    public User(String email, String username,String password)
+    public User(String email, String name,String password)
     {
         this.email = email;
-        this.username = username;
+        this.name = name;
         this.password = password;
     }
 
-    public User(String username,String password)
+    public User(String name,String password)
     {
-        this.username = username;
+        this.name = name;
         this.password = password;
     }
 
@@ -55,8 +55,8 @@ public class User {
         return password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public int getId() {
@@ -71,8 +71,8 @@ public class User {
         this.password = password;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
 
