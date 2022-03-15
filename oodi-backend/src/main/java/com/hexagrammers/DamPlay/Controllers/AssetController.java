@@ -2,6 +2,7 @@ package com.hexagrammers.DamPlay.Controllers;
 
 import com.hexagrammers.DamPlay.Models.Asset;
 import com.hexagrammers.DamPlay.Models.AssetRecipient;
+import com.hexagrammers.DamPlay.Models.Http.AssetResponseBody;
 import com.hexagrammers.DamPlay.Models.Http.HttpAssetBody;
 import com.hexagrammers.DamPlay.Models.PrincipalUserDetails;
 import com.hexagrammers.DamPlay.Models.User;
@@ -26,10 +27,13 @@ public class AssetController {
     AssetManager assetManager;
 
     @GetMapping("")
-    public List<Asset> getAssets()
+    public AssetResponseBody getAssets(Authentication authentication)
     {
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+        List<Asset> sentAssets = assetManager.getSentAssets(userDetails.getUser().getId());
+        List<Asset> receivedAssets = assetManager.getReceivedAssets(userDetails.getUser().getId());
 
-        return assetManager.getAssets();
+        return new AssetResponseBody(sentAssets,receivedAssets);
     }
 
     @PutMapping("{id}")

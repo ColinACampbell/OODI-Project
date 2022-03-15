@@ -33,8 +33,14 @@ public class AssetManager {
         return  assetRepository.findById(id).get();
     }
 
-    public List<Asset> getAssets()
+    public List<Asset> getSentAssets(int userID)
     {
-        return (List<Asset>) assetRepository.findAll();
+        return (List<Asset>) assetRepository.findBySender(userID);
     }
+
+    public List<Asset> getReceivedAssets(int userID)
+    {
+        return (List<Asset>) assetRepository.findByRecipient(userID);
+    }
+
 }
