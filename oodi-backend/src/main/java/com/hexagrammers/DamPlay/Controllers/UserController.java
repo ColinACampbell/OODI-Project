@@ -35,11 +35,10 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        System.out.println(user.getName());
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // Encrypt the user password on creation
         userManager.createUser(user);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(user,HttpStatus.CREATED);
 
     }
 
