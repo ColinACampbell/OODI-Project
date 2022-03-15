@@ -17,6 +17,7 @@ public class User {
     private String password;
     private String name;
     private String email;
+    private String position;
 
     @OneToMany(mappedBy = "sender")
     private List<Asset> assets;
@@ -25,11 +26,12 @@ public class User {
     private List<AssetRecipient> assetRecipients;
 
 
-    public User(String email, String name,String password)
+    public User(String email, String name,String password, String position)
     {
         this.email = email;
         this.name = name;
         this.password = password;
+        this.position = position;
     }
 
     public User(String name,String password)
@@ -75,5 +77,11 @@ public class User {
         this.name = name;
     }
 
+    public String getPosition() {
+        return position;
+    }
 
+    public void setPosition(String position) {
+        this.position = position;
+    }
 }
