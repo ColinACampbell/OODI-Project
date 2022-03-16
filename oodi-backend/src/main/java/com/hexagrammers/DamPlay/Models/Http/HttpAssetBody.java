@@ -12,9 +12,14 @@ public class HttpAssetBody extends Asset {
 
     public HttpAssetBody(String title, String description, String assetLink, String reviewedBy,List<Integer> recipients, String status)
     {
-        super(title, description, assetLink, reviewedBy, AssetStatus.valueOf(status));
+        super(title, description, assetLink, reviewedBy);
         this.status = status;
         this.assetRecipients = recipients;
+        if (status == null){
+            this.status = AssetStatus.SUBMITTED.name();
+            this.setStatus(AssetStatus.SUBMITTED);
+        } else
+            this.setStatus(AssetStatus.valueOf(status));
     }
 
     public List<Integer> getAssetRecipients() {
