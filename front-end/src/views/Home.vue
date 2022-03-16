@@ -92,6 +92,18 @@ export default {
           backgroundColor: ['#fee4e2', '#d1fadf', '#d1e9ff', '#fef0c7'],
         },
       ],
+       options: {
+        responsive: true,
+        // plugins: {
+          legend: {
+            display: false,
+          },
+          title: {
+            display: true,
+            text: "Chart"
+          }
+        // }
+      },
     };
 
     return { testData };
