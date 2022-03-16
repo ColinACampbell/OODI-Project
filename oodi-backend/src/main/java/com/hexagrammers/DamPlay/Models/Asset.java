@@ -32,16 +32,14 @@ public class Asset {
         this.recipients = new ArrayList<>();
     }
 
-    public Asset(String title, String description,String assetLink, String reviewedBy, AssetStatus assetStatus)
+    public Asset(String title, String description,String assetLink, String reviewedBy)
     {
         this.title = title;
         this.description = description;
         this.assetLink = assetLink;
         this.reviewedBy = reviewedBy;
         this.recipients = new ArrayList<>();
-        this.status = assetStatus;
     }
-
 
     public void setAssetLink(String assetLink) {
         this.assetLink = assetLink;

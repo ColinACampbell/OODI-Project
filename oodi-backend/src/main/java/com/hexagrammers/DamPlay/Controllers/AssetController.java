@@ -61,7 +61,8 @@ public class AssetController {
     public ResponseEntity<Asset> createAsset(@RequestBody HttpAssetBody assetBody, Authentication authentication)
     {
 
-        Asset asset = new Asset(assetBody.getTitle(),assetBody.getDescription(),assetBody.getAssetLink(),assetBody.getReviewedBy(), assetBody.getStatus());
+        Asset asset = new Asset(assetBody.getTitle(),assetBody.getDescription(),assetBody.getAssetLink(),assetBody.getReviewedBy());
+        asset.setStatus(assetBody.getStatus());
 
         // Get the user from the authentication layer
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
