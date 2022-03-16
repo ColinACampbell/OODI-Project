@@ -17,6 +17,7 @@ public class Asset {
     String title;
     String description;
     String assetLink;
+    AssetStatus status;
 
     String reviewedBy;
 
@@ -31,13 +32,14 @@ public class Asset {
         this.recipients = new ArrayList<>();
     }
 
-    public Asset(String title, String description,String assetLink, String reviewedBy)
+    public Asset(String title, String description,String assetLink, String reviewedBy, AssetStatus assetStatus)
     {
         this.title = title;
         this.description = description;
         this.assetLink = assetLink;
         this.reviewedBy = reviewedBy;
         this.recipients = new ArrayList<>();
+        this.status = assetStatus;
     }
 
 
@@ -98,5 +100,13 @@ public class Asset {
 
     public int getId() {
         return id;
+    }
+
+    public AssetStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AssetStatus assetStatus) {
+        this.status = assetStatus;
     }
 }
