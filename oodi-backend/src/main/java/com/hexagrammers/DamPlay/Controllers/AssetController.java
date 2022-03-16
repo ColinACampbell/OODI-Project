@@ -49,6 +49,8 @@ public class AssetController {
         asset.setDescription(assetBody.getDescription());
         asset.setReviewedBy(assetBody.getReviewedBy());
 
+        System.out.println(assetBody.getStatus());
+        asset.setStatus(assetBody.getStatus());
 
         assetManager.updateAsset(asset);
 
@@ -59,7 +61,7 @@ public class AssetController {
     public ResponseEntity<Asset> createAsset(@RequestBody HttpAssetBody assetBody, Authentication authentication)
     {
 
-        Asset asset = new Asset(assetBody.getTitle(),assetBody.getDescription(),assetBody.getAssetLink(),assetBody.getReviewedBy());
+        Asset asset = new Asset(assetBody.getTitle(),assetBody.getDescription(),assetBody.getAssetLink(),assetBody.getReviewedBy(), assetBody.getStatus());
 
         // Get the user from the authentication layer
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
