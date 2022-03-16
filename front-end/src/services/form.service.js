@@ -23,18 +23,11 @@ export default {
     },
 
     async processAsset(info){
-        let { fileData } = info
-
-        let encodedFile = ""
-        if(fileData){
-            encodedFile = await this.toBase64(fileData)   
-        }
-
-        info.fileData = encodedFile
 
         let token = store.getters.token
+        console.log(info)
 
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/asset/`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset`,
             {
                 method: "POST",
                 body: JSON.stringify(info),
@@ -46,6 +39,7 @@ export default {
             }
         )
             
+        console.log(res)
         if(res.status === 201){
             return "Successful"
         } else if(res.status == 409){

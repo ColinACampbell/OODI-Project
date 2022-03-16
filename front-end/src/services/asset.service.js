@@ -14,7 +14,7 @@ export default {
 
 
     async getAssets(token){
-        let res = await fetch("/asset/",
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset`,
         {
             method: "GET",
             headers: {
@@ -26,12 +26,14 @@ export default {
         if(res.status === 200){
             return await res.json()
         }
+
+        // console.log(await res.json())
         return "Failed to fetch"
        
     },
 
     async getAsset(token, id){
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/asset/${id}`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset/${id}`,
         {
             method: "GET",
             headers: {
@@ -43,7 +45,7 @@ export default {
         if(res.status === 200){
             return await res.json()
         }
-        return "Failed to fetch"
+        return Promise.reject("Failed to fetch", res.statusText)
        
     },
     
@@ -55,7 +57,7 @@ export default {
         }
 
         info.fileData = encodedFile
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/asset/${id}`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset/${id}`,
         {
             method: "PUT",
             body: JSON.stringify(info),
@@ -75,7 +77,7 @@ export default {
 
     async postFeedback(feedback, token){
 
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/feedback/`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/`,
             {
                 method: "POST",
                 body: JSON.stringify(feedback),
@@ -95,7 +97,7 @@ export default {
     },
 
     async getFeedbacks(token){
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/feedback/`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/`,
         {
             method: "GET",
             headers: {

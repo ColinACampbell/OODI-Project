@@ -63,7 +63,7 @@ export default {
             }
             User.signup(user)
                 .then(res => {
-                    if(res == "Invalid"){
+                    if(res !== 201){
                         this.name = ""
                         this.position = ""
                         this.email = ""
