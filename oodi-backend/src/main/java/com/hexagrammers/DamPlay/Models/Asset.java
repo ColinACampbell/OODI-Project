@@ -27,6 +27,9 @@ public class Asset {
     @OneToMany(mappedBy = "asset")
     List<AssetRecipient> recipients;
 
+    @OneToMany(mappedBy = "asset")
+    List<AssetStatusHistory> history;
+
     public Asset()
     {
         this.recipients = new ArrayList<>();
@@ -39,6 +42,7 @@ public class Asset {
         this.assetLink = assetLink;
         this.reviewedBy = reviewedBy;
         this.recipients = new ArrayList<>();
+        this.history = new ArrayList<>();
     }
 
     public void setAssetLink(String assetLink) {
@@ -106,5 +110,18 @@ public class Asset {
 
     public void setStatus(AssetStatus assetStatus) {
         this.status = assetStatus;
+    }
+
+    public List<AssetStatusHistory> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<AssetStatusHistory> history) {
+        this.history = history;
+    }
+
+    public  void addHistory(AssetStatusHistory history)
+    {
+        this.history.add(history);
     }
 }

@@ -87,6 +87,8 @@ public class AssetController {
         assetManager.updateAsset(asset);
         Asset newAsset = assetManager.getAsset(asset.getId()); // TODO: Reduce this transaction
 
+        assetManager.addAssetStatusHistory(asset.getStatus(),asset,userDetails.getUser());
+
         return new ResponseEntity<Asset>(newAsset, HttpStatus.CREATED);
     }
 }
