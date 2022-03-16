@@ -1,11 +1,8 @@
 package com.hexagrammers.DamPlay.Controllers;
 
-import com.hexagrammers.DamPlay.Models.Asset;
-import com.hexagrammers.DamPlay.Models.AssetRecipient;
+import com.hexagrammers.DamPlay.Models.*;
 import com.hexagrammers.DamPlay.Models.Http.AssetResponseBody;
 import com.hexagrammers.DamPlay.Models.Http.HttpAssetBody;
-import com.hexagrammers.DamPlay.Models.PrincipalUserDetails;
-import com.hexagrammers.DamPlay.Models.User;
 import com.hexagrammers.DamPlay.Services.AssetManager;
 import com.hexagrammers.DamPlay.Services.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +34,7 @@ public class AssetController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Asset> updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody)
+    public ResponseEntity<Asset> updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody,Authentication authentication)
     {
         Asset asset = assetManager.getAsset(assetId);
 
@@ -50,9 +47,22 @@ public class AssetController {
         asset.setReviewedBy(assetBody.getReviewedBy());
 
         System.out.println(assetBody.getStatus());
+
+        // Store the old status
+        AssetStatus oldStatus = asset.getStatus();
+
         asset.setStatus(assetBody.getStatus());
 
         assetManager.updateAsset(asset);
+
+        // Check if the current asset status is different from the old status
+        if (!oldStatus.equals(assetBody.getStatus()))
+        {
+            // If so just add it to history
+            PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+            assetManager.addAssetStatusHistory(asset.getStatus(),asset,userDetails.getUser());
+        }
+
 
         return new ResponseEntity<>(asset,HttpStatus.OK);
     }
