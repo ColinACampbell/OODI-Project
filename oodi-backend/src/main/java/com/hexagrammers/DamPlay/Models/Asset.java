@@ -14,21 +14,21 @@ public class Asset {
     @GeneratedValue
     private int id;
 
-    String title;
-    String description;
-    String assetLink;
-    AssetStatus status;
+    private String title;
+    private String description;
+    private String assetLink;
+    private AssetStatus status;
 
-    String reviewedBy;
+    private String reviewedBy;
 
     @ManyToOne()
-    User sender;
+    private User sender;
 
     @OneToMany(mappedBy = "asset")
-    List<AssetRecipient> recipients;
+    private List<AssetRecipient> recipients;
 
     @OneToMany(mappedBy = "asset")
-    List<AssetStatusHistory> history;
+    private List<AssetStatusHistory> history;
 
     public Asset()
     {

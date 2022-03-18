@@ -57,4 +57,11 @@ public class AssetManager {
         assetRepository.save(asset);
     }
 
+    public void deleteAsset(int assetID)
+    {
+        assetRecipientRepository.deleteAssetRecipientsByAssetId(assetID);
+        assetStatusRepository.deleteAssetHistriesByAssetId(assetID);
+        assetRepository.deleteById(assetID);
+    }
+
 }
