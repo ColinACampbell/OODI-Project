@@ -25,7 +25,6 @@ export default {
     async processAsset(info){
 
         let token = store.getters.token
-        console.log(info)
 
         let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset`,
             {
@@ -39,7 +38,6 @@ export default {
             }
         )
             
-        console.log(res)
         if(res.status === 201){
             return "Successful"
         } else if(res.status == 409){

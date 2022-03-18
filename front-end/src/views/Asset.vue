@@ -145,15 +145,14 @@ export default {
         .then(res => {
             this.title = res.title
             this.description = res.description
-            // this.status = AssetService.capitaliseFirstLetter(res.status)
+            this.status = res.status.replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())
             this.link = res.assetLink
             this.isSender = store.getters.userInfo.id === res.sender.id
             this.reviewDate = res.reviewedBy
             this.senderName = res.sender.name
 
+
             let recipientsId = res.recipients.map(recipient => recipient.recipient.id)
-            console.log(recipientsId)
-            console.log(this.recipients)
             this.recipients.forEach(recipient => {
                 if(recipientsId.includes(recipient.id)){
                     this.receiverNames.push(recipient.name)
@@ -182,28 +181,27 @@ export default {
                 }
             });
             let asset = {
-                status: this.status,
-                fileData: this.file,
-                type: this.type,
+                status: this.status.toUpperCase(),
                 title: this.title,
                 description: this.description,
-                sender: this.senderName,
-                reviewBy: this.reviewDate,
+                reviewedBy: this.reviewDate,
                 assetLink: this.link,
-                recipients: [...this.receivers]
+                assetRecipients: [...this.receivers]
             }
+
 
             AssetService.uploadChanges(store.getters.token, this.assetID, asset)
                 .then(res => {
                     if(res === "Title duplication"){
                         this.error = "Title already exists in the system."
                     } else {
-                        alert(res === "Failed to update" ? 
-                            "Asset failed to update. Try Again." :
-                            "Asset was succesfully updated!"
-                        )
-                        this.isEditable = false
-                        this.changeStatus = false
+                        if(res === "Failed to update"){
+                           this.error = "Asset failed to update. Try Again."
+                        }else{
+                            alert("Asset was succesfully updated!")
+                            this.isEditable = false
+                            this.changeStatus = false
+                        }
                     }
                 })
         }
@@ -230,20 +228,17 @@ export default {
         .then(res => {
             this.title = res.title
             this.description = res.description
-            this.status = AssetService.capitaliseFirstLetter(res.status)
+            this.status = res.status.replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())
             this.initalStatus = this.status
             this.link = res.assetLink
             this.receivers = []
             this.receiverNames = []
-            this.reviewDate = res.reviewBy
-            this.isSender = store.getters.userInfo.user.id === res.sender
+            this.reviewDate = res.reviewedBy
+            this.isSender = store.getters.userInfo.id === res.sender.id
+            let recipientsId = res.recipients.map(recipient => recipient.recipient.id)
             this.recipients.forEach(recipient => {
-                if(res.recipients.includes(recipient.id)){
+                if(recipientsId.includes(recipient.id)){
                     this.receiverNames.push(recipient.name)
-                }
-
-                if(recipient.id === res.sender){
-                    this.senderName = recipient.name
                 }
             });
 

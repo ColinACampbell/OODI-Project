@@ -77,7 +77,6 @@ export default {
         this.$emit('close');
     },
     handleSubmit(){
-        console.log(this.receiverNames, this.recipients)
         this.recipients.forEach(recipient => {
             if(this.receiverNames.includes(recipient.name)){
                 this.receivers.push(recipient.id)

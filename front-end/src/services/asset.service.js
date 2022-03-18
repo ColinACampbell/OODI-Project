@@ -50,13 +50,6 @@ export default {
     },
     
     async uploadChanges(token, id, info){
-        let { fileData } = info
-        let encodedFile = ""
-        if(fileData){
-            encodedFile = await this.toBase64(fileData)   
-        }
-
-        info.fileData = encodedFile
         let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset/${id}`,
         {
             method: "PUT",

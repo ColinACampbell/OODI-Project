@@ -27,22 +27,14 @@
             <p>{{ assetsCompleted.length > 1 ? "ASSETS COMPLETED" : "ASSET COMPLETED" }}</p>
           </div>
         </div>
-        <!-- <div class="chart">
-            <GChart
-              type="ColumnChart"
-              :options="options"
-              :data="chartData"
-            />
-        </div> -->
-        <BarChart :chartData="testData" />
       </div>
       <div class="details">
         <ul>
-          <li v-for="asset in viewAssets" :key="asset.status">
+          <li v-for="asset in viewAssets" :key="asset.title">
               {{ asset.title }}
               <ul>
                 
-                <li v-for="info in asset.history" :key="info.status">
+                <li v-for="info in asset.history" :key="info.title">
                     <p>{{ info.status }}</p>
                     <p>Date Modified: {{ new Date(+info.time).toDateString() }}</p>
                     <p>Modified by: {{ info.updatedBy.name }}</p>
@@ -58,17 +50,10 @@
 <script>
 import store from '../store/store'
 import AssetService from '../services/asset.service'
-import { BarChart } from 'vue-chart-3';
-import { Chart, registerables } from "chart.js";
 
-Chart.register(...registerables);
-// import { GChart } from "vue-google-charts";
 
 export default {
   name: 'Home',
-  components: {
-    BarChart,
-  },
   data(){
     return {
       name: store.getters.userName,
@@ -78,36 +63,9 @@ export default {
       assetsApproved: [],
       assetsCompleted: [],
       viewAssets: [],
-      // chartData: null,
-      // options: null
     }
   },
-  setup() {
-    const testData = {
-      labels: ["Submitted", "Pending", "Approved", "Completed"],
-      datasets: [
-        {
-          data: [1, 2, 3, 4],
-          // data: [this.assetsSubmitted.length, this.assetsPending.length, this.assetsApproved.length, this.assetsCompleted.length],
-          backgroundColor: ['#fee4e2', '#d1fadf', '#d1e9ff', '#fef0c7'],
-        },
-      ],
-       options: {
-        responsive: true,
-        // plugins: {
-          legend: {
-            display: false,
-          },
-          title: {
-            display: true,
-            text: "Chart"
-          }
-        // }
-      },
-    };
 
-    return { testData };
-  },
   beforeMount(){
     let date = new Date()
     this.date = date.toDateString()
@@ -117,45 +75,29 @@ export default {
         if(res === "Failed to fetch"){
           this.$router.push("/dashboard")
         } else {
-          // [...res.sent, ...res.received].forEach(asset => {
-          //   switch (asset.status) {
-          //     case "Submitted":
-          //       this.assetsSubmitted.push(asset)
-          //       break;
-          //     case "Approved":
-          //       this.assetsApproved.push(asset)
-          //       break;
-          //     case "Pending":
-          //       this.assetsPending.push(asset)
-          //       break;
-          //     case "Completed":
-          //       this.assetsCompleted.push(asset)
-          //       break;
-          //     default:
-          //       break;
-          //   }
-          // });
+          // console.log([...res.sent, ...res.received])
+          [...res.sent, ...res.received].forEach(asset => {
+            switch (asset.status) {
+              case "SUBMITTED":
+                this.assetsSubmitted.push(asset)
+                break;
+              case "APPROVED":
+                this.assetsApproved.push(asset)
+                break;
+              case "PENDING":
+                this.assetsPending.push(asset)
+                break;
+              case "COMPLETED":
+                this.assetsCompleted.push(asset)
+                break;
+              default:
+                break;
+            }
+          });
 
-          // this.fillData()
         }
       }).catch(err => console.log(err))
   },
-  // methods: {
-  //   fillData(){
-  //     this.chartData = [
-  //       ['Asset Progress', 'Number of Assets', { role: 'style' } ],
-  //       ['Submitted', this.assetsSubmitted.length, 'stroke-color: #f04438; stroke-opacity: 1; stroke-width: 1; fill-color: #fee4e2; '],
-  //       ['Pending', this.assetsPending.length, 'stroke-color: #12b76a; stroke-opacity: 1; stroke-width: 1; fill-color: #d1fadf; '],
-  //       ['Approved', this.assetsApproved.length, 'stroke-color: #2e90fa; stroke-opacity: 1; stroke-width: 1; fill-color: #d1e9ff; '],
-  //       ['Completed', this.assetsCompleted.length, 'stroke-color: #f79009; stroke-opacity: 1; stroke-width: 1; fill-color: #fef0c7; ' ],
-  //     ]
-  //     this.options = {
-  //       width: 650,
-  //       height: 350,
-  //       legend: 'none'
-  //     }
-  //   }
-  // }
 
  
 }

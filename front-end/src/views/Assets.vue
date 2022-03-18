@@ -27,10 +27,11 @@
                 <li>{{ recipient.recipient.name }}</li>
               </ul>
             </td>
-            <td></td>
-            <!-- <td class="view">
-              <span :class="(asset.status).replace(/(^|\s)\S/g, letter => letter.toUpperCase())">{{ (asset.status).replace(/(^|\s)\S/g, letter => letter.toUpperCase()) }}</span>
-            </td> -->
+            <td class="view">
+              <span :class="(asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())">
+                {{ (asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase()) }}
+              </span>
+            </td>
             <td>{{ asset.reviewedBy }}</td>
             <td class="view">
               <router-link :to="`/dashboard/assets/asset/${asset.id}`" class="view-btn">View</router-link>
@@ -58,10 +59,11 @@
             <td>
               {{ asset.sender.name }}
             </td>
-            <td></td>
-            <!-- <td class="view">
-              <span :class="(asset.history[asset.history.length - 1].status).replace(/(^|\s)\S/g, letter => letter.toUpperCase())">{{ (asset.history[asset.history.length - 1].status).replace(/(^|\s)\S/g, letter => letter.toUpperCase()) }}</span>
-            </td> -->
+            <td class="view">
+              <span :class="(asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())">
+                {{ (asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase()) }}
+              </span>
+            </td>
             <td>{{ asset.reviewedBy }}</td>
             <td class="view">
               <router-link :to="`/dashboard/assets/asset/${asset.id}`" class="view-btn">View</router-link>
@@ -97,12 +99,10 @@ export default {
   beforeMount(){
     Asset.getAssets(store.getters.token)
         .then(res => {
-          console.log(res)
             if(res === "Failed to fetch"){
               alert("Failed to load resources. Please try again")
               this.$router.push("/dashboard")
           } else {
-            console.log("here")
             this.assetsSent = [...res.sent]
             this.assetsReceived = [...res.received]
             
@@ -125,7 +125,6 @@ export default {
               alert("Failed to load resources please try again.")
               this.$router.push('/dashboard')
           } else {
-            console.log(res)
             this.assetsSent = res.sent
             this.assetsRecieved = res.recieved
           }
