@@ -34,10 +34,15 @@ public class AssetController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteAsset(@PathVariable("id") int assetID)
-    {
+    public ResponseEntity<?> deleteAsset(@PathVariable("id") int assetID) {
         assetManager.deleteAsset(assetID);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public Asset getAsset(@PathVariable("id") int assetId)
+    {
+        return assetManager.getAsset(assetId);
     }
 
     @PutMapping("{id}")

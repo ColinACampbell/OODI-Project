@@ -46,6 +46,7 @@ export default {
                     this.email = ""
                     this.password = ""
                 } else {
+                    // console.log(res)
                     store.commit('updateUserInfo', { userInfo: res })
                     this.$router.push("/dashboard")
                 }
@@ -86,6 +87,7 @@ input{
     height: 40px;
     border: 1px solid #d5c7ff;
     border-radius: 8px;
+    padding: 5px;
 }
 
 form div, .submit-btn{

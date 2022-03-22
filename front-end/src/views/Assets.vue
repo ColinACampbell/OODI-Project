@@ -24,15 +24,17 @@
             <td>{{ asset.title }}</td>
             <td>
               <ul v-for="recipient in asset.recipients" :key="recipient">
-                <li>{{ recipient.name }}</li>
+                <li>{{ recipient.recipient.name }}</li>
               </ul>
             </td>
             <td class="view">
-              <span :class="(asset.status).replace(/(^|\s)\S/g, letter => letter.toUpperCase())">{{ (asset.status).replace(/(^|\s)\S/g, letter => letter.toUpperCase()) }}</span>
+              <span :class="(asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())">
+                {{ (asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase()) }}
+              </span>
             </td>
-            <td>{{ asset.reviewBy }}</td>
+            <td>{{ asset.reviewedBy }}</td>
             <td class="view">
-              <router-link :to="`/dashboard/assets/asset/${asset._id}`" class="view-btn">View</router-link>
+              <router-link :to="`/dashboard/assets/asset/${asset.id}`" class="view-btn">View</router-link>
             </td>
           </tr>
         </tbody>
@@ -40,7 +42,7 @@
       <div v-if="assetsSent.length == 0" class="no-view">You have not created any asset as yet.</div>
     </div>
     <div>
-      <h2>Assets Recieved</h2>
+      <h2>Assets Received</h2>
       <table>
         <thead>
           <tr class="table-heading">
@@ -51,23 +53,25 @@
             <td class="view">Action</td>
           </tr>
         </thead>
-        <tbody v-for="asset in assetsRecieved" :key="asset">
+        <tbody v-for="asset in assetsReceived" :key="asset">
           <tr>
             <td>{{ asset.title }}</td>
             <td>
               {{ asset.sender.name }}
             </td>
             <td class="view">
-              <span :class="(asset.history[asset.history.length - 1].status).replace(/(^|\s)\S/g, letter => letter.toUpperCase())">{{ (asset.history[asset.history.length - 1].status).replace(/(^|\s)\S/g, letter => letter.toUpperCase()) }}</span>
+              <span :class="(asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())">
+                {{ (asset.status).replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase()) }}
+              </span>
             </td>
-            <td>{{ asset.reviewBy }}</td>
+            <td>{{ asset.reviewedBy }}</td>
             <td class="view">
-              <router-link :to="`/dashboard/assets/asset/${asset._id}`" class="view-btn">View</router-link>
+              <router-link :to="`/dashboard/assets/asset/${asset.id}`" class="view-btn">View</router-link>
             </td>
           </tr>
         </tbody>
       </table>
-      <div v-if="assetsRecieved.length == 0" class="no-view">There are no assets for you to view at the moment.</div>
+      <div v-if="assetsReceived.length == 0" class="no-view">There are no assets for you to view at the moment.</div>
     </div>
   </div>
 
@@ -88,7 +92,7 @@ export default {
         name: store.getters.userName, 
         isModalVisible: false,
         assetsSent: {},
-        assetsRecieved: {},
+        assetsReceived: {},
         isNotClient: store.getters.position !== "Client"
     }
   },
@@ -99,11 +103,11 @@ export default {
               alert("Failed to load resources. Please try again")
               this.$router.push("/dashboard")
           } else {
-            this.assetsSent = res.sent
-            this.assetsRecieved = res.recieved
+            this.assetsSent = [...res.sent]
+            this.assetsReceived = [...res.received]
             
           }
-        })
+        }).catch(err => console.log(err))
   },
   
   methods: {

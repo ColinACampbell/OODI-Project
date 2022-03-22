@@ -79,18 +79,15 @@ export default {
     handleSubmit(){
         this.recipients.forEach(recipient => {
             if(this.receiverNames.includes(recipient.name)){
-                this.receivers.push(recipient._id)
+                this.receivers.push(recipient.id)
             }
         });
         let asset = {
-            fileData: this.file,
-            type: this.type,
             title: this.title,
             description: this.description,
-            sender: this.senderName,
-            reviewBy: this.reviewDate,
+            reviewedBy: this.reviewDate,
             assetLink: this.link,
-            recipients: this.receivers
+            assetRecipients: [...this.receivers]
         }
         Form.processAsset(asset)
             .then(res => {
