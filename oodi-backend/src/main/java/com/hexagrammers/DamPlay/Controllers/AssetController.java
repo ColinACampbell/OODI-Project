@@ -35,6 +35,7 @@ public class AssetController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteAsset(@PathVariable("id") int assetID) {
+        // TODO : Enable only the creators to delete an asset
         assetManager.deleteAsset(assetID);
         return new ResponseEntity<>(HttpStatus.OK);
     }

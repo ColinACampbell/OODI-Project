@@ -29,7 +29,6 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody User user)
     {
-
         if (userManager.findByEmail(user.getEmail()) != null)
         {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
