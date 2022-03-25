@@ -26,6 +26,9 @@ public class Asset {
     @OneToMany(mappedBy = "asset")
     List<AssetRecipient> recipients;
 
+    @OneToMany(mappedBy = "asset")
+    List<Feedback> feedbacks;
+
     public Asset()
     {
         this.recipients = new ArrayList<>();
