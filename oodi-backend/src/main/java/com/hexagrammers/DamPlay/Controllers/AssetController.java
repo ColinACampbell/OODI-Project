@@ -1,5 +1,6 @@
 package com.hexagrammers.DamPlay.Controllers;
 
+import com.hexagrammers.DamPlay.AuthorizationException;
 import com.hexagrammers.DamPlay.Models.*;
 import com.hexagrammers.DamPlay.Models.Http.AssetResponseBody;
 import com.hexagrammers.DamPlay.Models.Http.HttpAssetBody;
@@ -34,9 +35,17 @@ public class AssetController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteAsset(@PathVariable("id") int assetID) {
-        // TODO : Enable only the creators to delete an asset
-        assetManager.deleteAsset(assetID);
+    public ResponseEntity<?> deleteAsset(@PathVariable("id") int assetID, Authentication authentication) {
+
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+        try
+        {
+            assetManager.deleteAsset(assetID,userDetails.getUser().getId());
+        } catch (AuthorizationException authorizationException)
+        {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

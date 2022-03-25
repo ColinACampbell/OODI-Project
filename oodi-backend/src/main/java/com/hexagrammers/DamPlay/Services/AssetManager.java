@@ -1,5 +1,6 @@
 package com.hexagrammers.DamPlay.Services;
 
+import com.hexagrammers.DamPlay.AuthorizationException;
 import com.hexagrammers.DamPlay.Models.*;
 import com.hexagrammers.DamPlay.Repositories.AssetRecipientRepository;
 import com.hexagrammers.DamPlay.Repositories.AssetRepository;
@@ -57,11 +58,19 @@ public class AssetManager {
         assetRepository.save(asset);
     }
 
-    public void deleteAsset(int assetID)
+    public void deleteAsset(int assetID,int userID) throws AuthorizationException
     {
-        assetRecipientRepository.deleteAssetRecipientsByAssetId(assetID);
-        assetStatusRepository.deleteAssetHistriesByAssetId(assetID);
-        assetRepository.deleteById(assetID);
+        Asset asset = assetRepository.findById(userID).get();
+
+        if (asset.getSender().getId() != userID)
+        {
+            throw new AuthorizationException("");
+        } else
+        {
+            assetRecipientRepository.deleteAssetRecipientsByAssetId(assetID);
+            assetStatusRepository.deleteAssetHistriesByAssetId(assetID);
+            assetRepository.deleteById(assetID);
+        }
     }
 
 }
