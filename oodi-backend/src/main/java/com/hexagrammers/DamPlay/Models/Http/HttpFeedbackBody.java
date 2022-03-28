@@ -10,7 +10,7 @@ public class HttpFeedbackBody extends Feedback {
 
     public HttpFeedbackBody(String title,String body,int id)
     {
-        super(title, body, id);
+        super(title, body);
     }
 
 

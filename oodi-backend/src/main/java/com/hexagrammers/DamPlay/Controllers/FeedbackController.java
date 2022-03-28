@@ -3,9 +3,11 @@ package com.hexagrammers.DamPlay.Controllers;
 import com.hexagrammers.DamPlay.Models.*;
 import com.hexagrammers.DamPlay.Models.Http.HttpFeedbackBody;
 import com.hexagrammers.DamPlay.Services.FeedbackManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/feeback")
 public class FeedbackController {
 
-    //@Autowired
+    @Autowired
     FeedbackManager feedbackManager;
 
     @GetMapping("")
@@ -52,17 +54,14 @@ public class FeedbackController {
     public ResponseEntity<Feedback> createFeedback(@RequestBody HttpFeedbackBody feedbackBody)
     {
 
-        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody(),feedbackBody.getId());
-
-
-
-        feedbackManager.updateFeedback(feedback);
+        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody());
 
 
         feedbackManager.updateFeedback(feedback);
-        Feedback newFeedback = feedbackManager.getFeedback(feedback.getId()); // TODO: Reduce this transaction
 
-        return new ResponseEntity<Feedback>(newFeedback, HttpStatus.CREATED);
+
+
+        return new ResponseEntity<Feedback>(feedback, HttpStatus.CREATED);
     }
 
 

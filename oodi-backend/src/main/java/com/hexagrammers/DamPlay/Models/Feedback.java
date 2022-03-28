@@ -22,11 +22,10 @@ public class Feedback {
     public Feedback() { }
 
 
-    public Feedback(String title,String body,int id){
+    public Feedback(String title,String body){
 
         this.title = title;
         this.body = body;
-        this.id = id;
 
     }
 
