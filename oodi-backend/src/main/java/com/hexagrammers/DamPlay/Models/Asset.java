@@ -26,6 +26,9 @@ public class Asset {
     @OneToMany(mappedBy = "asset")
     List<AssetRecipient> recipients;
 
+    @OneToMany(mappedBy = "asset")
+    List<Feedback> feedbacks;
+
     public Asset()
     {
         this.recipients = new ArrayList<>();
@@ -38,6 +41,7 @@ public class Asset {
         this.assetLink = assetLink;
         this.reviewedBy = reviewedBy;
         this.recipients = new ArrayList<>();
+        this.feedbacks = new ArrayList<>();
     }
 
 
@@ -73,7 +77,6 @@ public class Asset {
         return title;
     }
 
-
     public void addRecipient(AssetRecipient recipient)
     {
         recipients.add(recipient);
@@ -84,7 +87,6 @@ public class Asset {
     }
 
     public List<AssetRecipient> getRecipients() {
-
         return recipients;
     }
 
@@ -98,5 +100,14 @@ public class Asset {
 
     public int getId() {
         return id;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void addFeedbackReply(Feedback feedback)
+    {
+        this.feedbacks.add(feedback);
     }
 }

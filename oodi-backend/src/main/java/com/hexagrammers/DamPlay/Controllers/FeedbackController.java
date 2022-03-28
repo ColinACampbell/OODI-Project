@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
 @RestController
@@ -18,19 +17,13 @@ public class FeedbackController {
     @Autowired
     FeedbackManager feedbackManager;
 
-    @GetMapping("")
-    public List<Feedback> getFeedback()
+    @GetMapping("{assetID}")
+    public List<Feedback> getFeedbacks(@PathVariable("assetID") int assetID)
     {
-
+        // Write code to get all the feedbacks for an asset
         return feedbackManager.getFeedback();
     }
 
-    @GetMapping("{id}")
-    public Feedback getFeedback(@PathVariable("id") int feedbackId)
-    {
-
-        return feedbackManager.getFeedback(feedbackId);
-    }
     @PutMapping("{id}")
     public ResponseEntity<Feedback> updateFeedback(@PathVariable("id") int feedbackId, @RequestBody() Feedback feedbackBody)
     {
@@ -43,8 +36,6 @@ public class FeedbackController {
         feedback.setBody(feedbackBody.getBody());
         feedback.setTitle(feedbackBody.getTitle());
 
-
-
         feedbackManager.updateFeedback(feedback);
 
         return new ResponseEntity<>(feedback,HttpStatus.OK);
@@ -53,15 +44,15 @@ public class FeedbackController {
     @PostMapping("")
     public ResponseEntity<Feedback> createFeedback(@RequestBody HttpFeedbackBody feedbackBody)
     {
-
-        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody());
-
+        // Get the asset from the asset id using the asset manager
+        // Remove the placeholder asset and pass the correct asset using
+        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody(),feedbackBody.getId(), new Asset());
 
         feedbackManager.updateFeedback(feedback);
 
+        Feedback newFeedback = feedbackManager.getFeedback(feedback.getId());
 
-
-        return new ResponseEntity<Feedback>(feedback, HttpStatus.CREATED);
+        return new ResponseEntity<Feedback>(newFeedback, HttpStatus.CREATED);
     }
 
 

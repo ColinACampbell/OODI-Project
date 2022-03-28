@@ -5,13 +5,20 @@ import com.hexagrammers.DamPlay.Models.Feedback;
 import java.util.List;
 
 public class HttpFeedbackBody extends Feedback {
-    private List<Integer> feedbackList;
 
+    private int assetID;
 
-    public HttpFeedbackBody(String title,String body,int id)
+    public HttpFeedbackBody(String title,String body, int date)
     {
-        super(title, body);
+        super(title,body,date,null);
+        this.assetID = assetID;
     }
 
+    public int getAssetID() {
+        return assetID;
+    }
 
+    public void setAssetID(int assetID) {
+        this.assetID = assetID;
+    }
 }
