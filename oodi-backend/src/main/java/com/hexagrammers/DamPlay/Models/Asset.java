@@ -1,8 +1,5 @@
 package com.hexagrammers.DamPlay.Models;
 
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
