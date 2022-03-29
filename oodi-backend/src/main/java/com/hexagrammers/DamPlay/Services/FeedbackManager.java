@@ -1,5 +1,6 @@
 package com.hexagrammers.DamPlay.Services;
 
+import com.hexagrammers.DamPlay.Models.Asset;
 import com.hexagrammers.DamPlay.Models.Feedback;
 import com.hexagrammers.DamPlay.Repositories.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ public class FeedbackManager {
         return (Feedback) feedbackRepository.findById(id).get();
     }
 
-    public List<Feedback> getFeedback()
+    public List<Feedback> getFeedbacks(Asset asset)
     {
 
-        return (List<Feedback>) feedbackRepository.findAll();
+        return (List<Feedback>) feedbackRepository.findByAsset(asset);
     }
 
 

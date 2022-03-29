@@ -28,7 +28,6 @@ public class AssetController {
     @GetMapping("")
     public List<Asset> getAssets()
     {
-
         return assetManager.getAssets();
     }
 

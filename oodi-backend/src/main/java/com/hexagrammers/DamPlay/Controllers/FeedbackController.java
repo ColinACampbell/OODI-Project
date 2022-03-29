@@ -43,8 +43,8 @@ public class FeedbackController {
     @GetMapping("{assetID}")
     public List<Feedback> getFeedbacks(@PathVariable("assetID") int assetID)
     {
-        // Write code to get all the feedbacks for an asset
-        return feedbackManager.getFeedback();
+        Asset asset = assetManager.getAsset(assetID);
+        return feedbackManager.getFeedbacks(asset);
     }
 
     @PutMapping("{id}")
