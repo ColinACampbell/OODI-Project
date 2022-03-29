@@ -6,27 +6,27 @@ import com.hexagrammers.DamPlay.Models.Feedback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HttpFeedbackBody  {
+public class HttpFeedbackReply  {
 
-    private int assetID;
+    private int feedbackID;
     private String title;
     private String body;
     private int date;
 
-    public HttpFeedbackBody(int assetID,String title,String body, int date)
+    public HttpFeedbackReply(int feedbackID,String title,String body, int date)
     {
-        this.assetID = assetID;
+        this.feedbackID = feedbackID;
         this.title = title;
         this.body = body;
         this.date = date;
     }
 
-    public int getAssetID() {
-        return assetID;
+    public int getFeedbackID() {
+        return feedbackID;
     }
 
-    public void setAssetID(int assetID) {
-        this.assetID = assetID;
+    public void setFeedbackId(int feedbackId) {
+        this.feedbackID = feedbackId;
     }
 
     public String getTitle() {
