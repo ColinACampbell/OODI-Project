@@ -103,8 +103,8 @@ export default {
         return "Failed to upload"
     },
 
-    async getFeedbacks(token){
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/`,
+    async getFeedbacks(token, id){
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/${id}`,
         {
             method: "GET",
             headers: {
@@ -113,9 +113,10 @@ export default {
             },
             
         })
-        if(res.status === 200){
-            return await res.json()
-        }
+        console.log(await res.json())
+        // if(res.status === 200){
+        //     return await res.json()
+        // }
         return "Failed to fetch"
        
     },

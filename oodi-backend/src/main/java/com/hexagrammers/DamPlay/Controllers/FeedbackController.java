@@ -26,7 +26,7 @@ public class FeedbackController {
     public ResponseEntity<Feedback> createFeedback(@RequestBody HttpFeedbackBody feedbackBody)
     {
         // Remove the placeholder asset and pass the correct asset using
-        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody(),feedbackBody.getDate());
+        Feedback feedback = new Feedback(feedbackBody.getTitle(), feedbackBody.getBody());
 
         // Get the asset from the asset id using the asset manager
         Asset asset = assetManager.getAsset(feedbackBody.getAssetID());
@@ -75,7 +75,7 @@ public class FeedbackController {
         if (feedback == null)
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 
-        FeedbackReply feedbackReply = new FeedbackReply(httpFeedbackReplyBody.getTitle(),httpFeedbackReplyBody.getBody(),httpFeedbackReplyBody.getDate());
+        FeedbackReply feedbackReply = new FeedbackReply(httpFeedbackReplyBody.getTitle(),httpFeedbackReplyBody.getBody());
         feedback.addFeedbackReply(feedbackReply);
         feedbackReply.setFeedback(feedback);
 

@@ -27,8 +27,8 @@
             <p>{{ assetsCompleted.length > 1 ? "ASSETS COMPLETED" : "ASSET COMPLETED" }}</p>
           </div>
         </div>
-        <div>
-          <canvas id="myChart" width="200" height="200"></canvas>
+        <div class="canvas">
+          <canvas id="myChart" width="400" height="400"></canvas>
         </div>
       </div>
       <div class="details">
@@ -79,8 +79,8 @@ export default {
           labels: ['Submitted', 'Pending', 'Approved', 'Completed'],
           datasets: [{
               label: 'Asset Statuses',
-              data: [3, 6, 8, 1],
-              // data: [this.assetsSubmitted.length, this.assetsPending.length, this.assetsApproved.length,this.assetsCompleted.length, ],
+              // data: [3, 6, 8, 1],
+              data: [this.assetsSubmitted.length, this.assetsPending.length, this.assetsApproved.length,this.assetsCompleted.length],
               backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)',
@@ -97,13 +97,15 @@ export default {
           }]
       },
       options: {
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+              beginAtZero: true
           }
+        }
       }
-      });
+    });
   },
 
   beforeMount(){
@@ -230,8 +232,6 @@ export default {
   align-items: center;
 }
 
-.chart{
-  display: block;
-}
+
 
 </style>

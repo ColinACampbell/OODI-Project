@@ -161,14 +161,15 @@ export default {
 
         }).catch(err => console.log(err))
 
-    // AssetService.getFeedbacks(store.getters.token)
-    // .then(res => {
-    //     res.forEach(feedback =>{
-    //         if(feedback.asset.id === this.assetID){
-    //             this.assetFeedbacks.push(feedback)
-    //         }
-    //     })
-    // })
+    AssetService.getFeedbacks(store.getters.token, this.assetID)
+    .then(res => {
+        console.log(res)
+        // res.forEach(feedback =>{
+        //     if(feedback.asset.id === this.assetID){
+        //         this.assetFeedbacks.push(feedback)
+        //     }
+        // })
+    })
     
   },
   methods: {
