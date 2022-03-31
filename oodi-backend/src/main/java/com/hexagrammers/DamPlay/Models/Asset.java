@@ -1,8 +1,5 @@
 package com.hexagrammers.DamPlay.Models;
 
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +27,9 @@ public class Asset {
     @OneToMany(mappedBy = "asset")
     private List<AssetStatusHistory> history;
 
+    @OneToMany(mappedBy = "asset")
+    List<Feedback> feedbacks;
+
     public Asset()
     {
         this.recipients = new ArrayList<>();
@@ -43,6 +43,7 @@ public class Asset {
         this.reviewedBy = reviewedBy;
         this.recipients = new ArrayList<>();
         this.history = new ArrayList<>();
+        this.feedbacks = new ArrayList<>();
     }
 
     public void setAssetLink(String assetLink) {
@@ -77,7 +78,6 @@ public class Asset {
         return title;
     }
 
-
     public void addRecipient(AssetRecipient recipient)
     {
         recipients.add(recipient);
@@ -88,7 +88,6 @@ public class Asset {
     }
 
     public List<AssetRecipient> getRecipients() {
-
         return recipients;
     }
 
@@ -123,5 +122,14 @@ public class Asset {
     public  void addHistory(AssetStatusHistory history)
     {
         this.history.add(history);
+    }
+    
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void addFeedbackReply(Feedback feedback)
+    {
+        this.feedbacks.add(feedback);
     }
 }

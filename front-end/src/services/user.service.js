@@ -21,7 +21,7 @@ export default {
         if(res.status !== 200){
             return "Invalid login"
         }else{
-            console.log(data)
+            // console.log(data)
             return data
         }
        

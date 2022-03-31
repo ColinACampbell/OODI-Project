@@ -27,6 +27,9 @@
             <p>{{ assetsCompleted.length > 1 ? "ASSETS COMPLETED" : "ASSET COMPLETED" }}</p>
           </div>
         </div>
+        <div>
+          <canvas id="myChart" width="200" height="200"></canvas>
+        </div>
       </div>
       <div class="details">
         <ul>
@@ -51,6 +54,8 @@
 import store from '../store/store'
 import AssetService from '../services/asset.service'
 
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 export default {
   name: 'Home',
@@ -65,17 +70,51 @@ export default {
       viewAssets: [],
     }
   },
+  mounted(){
+    const ctx = document.getElementById('myChart');
+    ctx.fillStyle = 'transparent';
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ['Submitted', 'Pending', 'Approved', 'Completed'],
+          datasets: [{
+              label: 'Asset Statuses',
+              data: [3, 6, 8, 1],
+              // data: [this.assetsSubmitted.length, this.assetsPending.length, this.assetsApproved.length,this.assetsCompleted.length, ],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+      });
+  },
 
   beforeMount(){
     let date = new Date()
     this.date = date.toDateString()
     AssetService.getAssets(store.getters.token)
       .then(res => {
-        console.log(res)
+        // console.log(res)
         if(res === "Failed to fetch"){
           this.$router.push("/dashboard")
         } else {
-          // console.log([...res.sent, ...res.received])
           [...res.sent, ...res.received].forEach(asset => {
             switch (asset.status) {
               case "SUBMITTED":
@@ -97,7 +136,8 @@ export default {
 
         }
       }).catch(err => console.log(err))
-  },
+
+  }
 
  
 }

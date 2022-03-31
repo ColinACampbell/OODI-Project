@@ -48,6 +48,20 @@ export default {
         return Promise.reject("Failed to fetch", res.statusText)
        
     },
+
+    async deleteAsset(token, id){
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset/${id}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            },
+            
+        })
+        return res.status === 200
+       
+    },
     
     async uploadChanges(token, id, info){
         let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/asset/${id}`,

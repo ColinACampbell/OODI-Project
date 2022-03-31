@@ -17,6 +17,7 @@
             <td>Status</td>
             <td>Reviewed By</td>
             <td class="view">Action</td>
+            <td class="view">Action</td>
           </tr>
         </thead>
         <tbody v-for="asset in assetsSent" :key="asset">
@@ -35,6 +36,9 @@
             <td>{{ asset.reviewedBy }}</td>
             <td class="view">
               <router-link :to="`/dashboard/assets/asset/${asset.id}`" class="view-btn">View</router-link>
+            </td>
+            <td class="view">
+              <button class="view-btn delete" @click="handleDeleteClick(asset.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -129,6 +133,17 @@ export default {
             this.assetsRecieved = res.recieved
           }
         })
+    },
+
+    handleDeleteClick(id){
+      let confirm = window.confirm("Are you sure you want to delete this asset")
+
+      if(confirm){
+        Asset.deleteAsset(store.getters.token, id)
+      }else{
+        console.log("error")
+      }
+
     }
   }
 };
@@ -198,6 +213,13 @@ td{
   align-items: center;
   justify-content: center;
   margin: 10px auto;
+}
+
+.delete{
+  border: 1px solid #f04438;
+  color: #f04438;
+  background: none;
+  cursor: pointer;
 }
 
 a{

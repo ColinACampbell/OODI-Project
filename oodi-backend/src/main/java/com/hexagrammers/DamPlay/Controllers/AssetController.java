@@ -32,6 +32,7 @@ public class AssetController {
         List<Asset> receivedAssets = assetManager.getReceivedAssets(userDetails.getUser().getId());
 
         return new AssetResponseBody(sentAssets,receivedAssets);
+        // return assetManager.getAssets();
     }
 
     @DeleteMapping("{id}")
@@ -47,6 +48,7 @@ public class AssetController {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+        
     }
 
     @GetMapping("{id}")
