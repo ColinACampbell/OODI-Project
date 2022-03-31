@@ -12,7 +12,6 @@ public class FeedbackReply {
     private int id;
 
     private String title;
-    private int date;
     private String body;
 
     @ManyToOne()
@@ -20,15 +19,27 @@ public class FeedbackReply {
 
     public FeedbackReply() { }
 
-    public FeedbackReply(String title,String body,int date){
+    public FeedbackReply(String title,String body){
 
         this.title = title;
         this.body = body;
-        this.date = date;
     }
 
     public void setFeedback(Feedback feedback) {
         this.feedback = feedback;
+    }
+
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getBody() {
+        return body;
     }
 
     @JsonIgnore()

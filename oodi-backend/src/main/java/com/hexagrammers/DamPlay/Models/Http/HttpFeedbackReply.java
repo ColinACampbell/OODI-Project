@@ -11,14 +11,12 @@ public class HttpFeedbackReply  {
     private int feedbackID;
     private String title;
     private String body;
-    private int date;
 
-    public HttpFeedbackReply(int feedbackID,String title,String body, int date)
+    public HttpFeedbackReply(int feedbackID,String title,String body)
     {
         this.feedbackID = feedbackID;
         this.title = title;
         this.body = body;
-        this.date = date;
     }
 
     public int getFeedbackID() {
@@ -43,13 +41,5 @@ public class HttpFeedbackReply  {
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    public int getDate() {
-        return date;
-    }
-
-    public void setDate(int date) {
-        this.date = date;
     }
 }

@@ -16,7 +16,6 @@ public class Feedback {
     private int id;
 
     private String title;
-    private int date;
     private String body;
 
     @OneToMany(mappedBy = "feedback")
@@ -30,11 +29,10 @@ public class Feedback {
     }
 
 
-    public Feedback(String title,String body,int date){
+    public Feedback(String title,String body){
 
         this.title = title;
         this.body = body;
-        this.date = date;
         this.replies = new ArrayList<>();
     }
 
@@ -53,17 +51,8 @@ public class Feedback {
         this.id = id;
     }
 
-
     public int getId() {
         return id;
-    }
-
-    public int getDate() {
-        return date;
-    }
-
-    public void setDate(int date) {
-        this.date = date;
     }
 
     public List<FeedbackReply> getReplies() {
