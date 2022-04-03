@@ -17,12 +17,17 @@ public class FeedbackReply {
     @ManyToOne()
     private Feedback feedback;
 
+    @ManyToOne()
+    User user;
+
     public FeedbackReply() { }
 
-    public FeedbackReply(String title,String body){
+
+    public FeedbackReply(String title,String body, User user){
 
         this.title = title;
         this.body = body;
+        this.user = user;
     }
 
     public void setFeedback(Feedback feedback) {
@@ -45,5 +50,11 @@ public class FeedbackReply {
     @JsonIgnore()
     public Feedback getFeedback() {
         return feedback;
+    }
+
+    public String getName() {
+        if (user == null)
+            return null;
+        return user.getEmail();
     }
 }
