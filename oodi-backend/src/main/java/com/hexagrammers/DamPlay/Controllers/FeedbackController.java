@@ -2,6 +2,7 @@ package com.hexagrammers.DamPlay.Controllers;
 
 import com.hexagrammers.DamPlay.Models.*;
 import com.hexagrammers.DamPlay.Models.Http.HttpFeedbackBody;
+import com.hexagrammers.DamPlay.Services.AssetManager;
 import com.hexagrammers.DamPlay.Services.FeedbackManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +18,15 @@ public class FeedbackController {
     @Autowired
     FeedbackManager feedbackManager;
 
+    @Autowired
+    AssetManager assetManager;
+
     @GetMapping("{assetID}")
     public List<Feedback> getFeedbacks(@PathVariable("assetID") int assetID)
     {
         // Write code to get all the feedbacks for an asset
-        return feedbackManager.getFeedback();
+        Asset asset = assetManager.getAsset(assetID);
+        return (List<Feedback>) feedbackManager.getFeedback(asset);
     }
 
     @PutMapping("{id}")
