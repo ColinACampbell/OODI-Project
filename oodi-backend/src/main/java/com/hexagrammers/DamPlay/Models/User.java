@@ -1,9 +1,13 @@
 package com.hexagrammers.DamPlay.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity()
@@ -25,8 +29,13 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
     private List<AssetRecipient> assetRecipients;
 
-    //@OneToMany(mappedBy = "updatedBy")
-    //private List<AssetStatusHistory> assetStatusHistory;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    List<Feedback> feedbacks = new ArrayList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user")
+    List<FeedbackReply> feedbackReplies = new ArrayList<>();
 
 
     public User(String email, String name,String password, String position)
@@ -45,7 +54,6 @@ public class User {
 
     public User()
     {
-
     }
 
     public void setId(int id) {
@@ -86,6 +94,21 @@ public class User {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    @JsonIgnore
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void addFeedback(Feedback feedback)
+    {
+        this.feedbacks.add(feedback);
+    }
+
+    public void addFeedbackReply(FeedbackReply feedbackReply)
+    {
+        this.feedbackReplies.add(feedbackReply);
     }
 
     //public List<AssetRecipient> getAssetRecipients() {

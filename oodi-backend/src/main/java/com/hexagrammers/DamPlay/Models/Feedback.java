@@ -24,16 +24,19 @@ public class Feedback {
     @ManyToOne()
     Asset asset;
 
+    @ManyToOne()
+    User user;
+
     public Feedback() {
         this.replies = new ArrayList<>();
     }
 
-
-    public Feedback(String title, String body){
+    public Feedback(String title,String body,User user){
 
         this.title = title;
         this.body = body;
         this.replies = new ArrayList<>();
+        this.user = user;
     }
 
     public void setTitle(String title) {
@@ -50,7 +53,6 @@ public class Feedback {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public int getId() {
         return id;
@@ -76,5 +78,18 @@ public class Feedback {
 
     public void setAsset(Asset asset) {
         this.asset = asset;
+    }
+
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
+
+    public String getName()
+    {
+        System.out.println(user);
+        if (user == null)
+            return "";
+        return user.getEmail();
     }
 }
