@@ -5,9 +5,11 @@ import com.hexagrammers.DamPlay.Models.Http.HttpFeedbackBody;
 import com.hexagrammers.DamPlay.Models.Http.HttpFeedbackReply;
 import com.hexagrammers.DamPlay.Services.AssetManager;
 import com.hexagrammers.DamPlay.Services.FeedbackManager;
+import com.hexagrammers.DamPlay.Services.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,11 +24,18 @@ public class FeedbackController {
     @Autowired
     AssetManager assetManager;
 
+    @Autowired
+    UserManager userManager;
+
     @PostMapping("")
-    public ResponseEntity<Feedback> createFeedback(@RequestBody HttpFeedbackBody feedbackBody)
+    public ResponseEntity<Feedback> createFeedback(@RequestBody HttpFeedbackBody feedbackBody, Authentication authentication)
     {
+
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+
+        User user = userDetails.getUser();
         // Remove the placeholder asset and pass the correct asset using
-        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody());
+        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody(),user);
 
         // Get the asset from the asset id using the asset manager
         Asset asset = assetManager.getAsset(feedbackBody.getAssetID());
@@ -37,6 +46,9 @@ public class FeedbackController {
         asset.addFeedbackReply(feedback);
 
         assetManager.updateAsset(asset);
+
+        user.addFeedback(feedback);
+        userManager.updateUser(user);
 
         return new ResponseEntity<Feedback>(feedback, HttpStatus.CREATED);
     }

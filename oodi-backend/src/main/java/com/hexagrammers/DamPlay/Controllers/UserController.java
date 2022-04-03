@@ -36,7 +36,7 @@ public class UserController {
         }
 
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // Encrypt the user password on creation
-        userManager.createUser(user);
+        userManager.updateUser(user);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
 

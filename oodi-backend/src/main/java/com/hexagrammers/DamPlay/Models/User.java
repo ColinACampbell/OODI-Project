@@ -1,9 +1,11 @@
 package com.hexagrammers.DamPlay.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity()
@@ -24,6 +26,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
     private List<AssetRecipient> assetRecipients;
 
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    List<Feedback> feedbacks = new ArrayList<>();
+
 
     public User(String email, String username,String password)
     {
@@ -40,7 +45,6 @@ public class User {
 
     public User()
     {
-
     }
 
     public void setId(int id) {
@@ -73,6 +77,16 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @JsonIgnore
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void addFeedback(Feedback feedback)
+    {
+        this.feedbacks.add(feedback);
     }
 
 
