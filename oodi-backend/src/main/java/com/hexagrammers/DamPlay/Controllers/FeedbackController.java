@@ -79,21 +79,26 @@ public class FeedbackController {
     }
 
     @PostMapping("/reply")
-    public ResponseEntity<FeedbackReply> createFeedbackReply(@RequestBody HttpFeedbackReply httpFeedbackReplyBody)
+    public ResponseEntity<FeedbackReply> createFeedbackReply(@RequestBody HttpFeedbackReply httpFeedbackReplyBody,Authentication authentication)
     {
-        System.out.println(httpFeedbackReplyBody.getFeedbackID());
+
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
+
         Feedback feedback = feedbackManager.getFeedback(httpFeedbackReplyBody.getFeedbackID());
 
         if (feedback == null)
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 
-        FeedbackReply feedbackReply = new FeedbackReply(httpFeedbackReplyBody.getTitle(),httpFeedbackReplyBody.getBody());
+        FeedbackReply feedbackReply = new FeedbackReply(httpFeedbackReplyBody.getTitle(),httpFeedbackReplyBody.getBody(),user);
         feedback.addFeedbackReply(feedbackReply);
         feedbackReply.setFeedback(feedback);
 
         feedbackManager.updateFeedback(feedback);
         feedbackManager.saveReply(feedbackReply);
 
+        user.addFeedbackReply(feedbackReply);
+        userManager.updateUser(user);
 
         return new ResponseEntity<>(feedbackReply,HttpStatus.CREATED);
     }

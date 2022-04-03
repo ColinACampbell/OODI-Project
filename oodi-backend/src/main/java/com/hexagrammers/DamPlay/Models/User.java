@@ -3,6 +3,8 @@ package com.hexagrammers.DamPlay.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,6 +31,9 @@ public class User {
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     List<Feedback> feedbacks = new ArrayList<>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user")
+    List<FeedbackReply> feedbackReplies = new ArrayList<>();
 
     public User(String email, String username,String password)
     {
@@ -87,6 +92,11 @@ public class User {
     public void addFeedback(Feedback feedback)
     {
         this.feedbacks.add(feedback);
+    }
+
+    public void addFeedbackReply(FeedbackReply feedbackReply)
+    {
+        this.feedbackReplies.add(feedbackReply);
     }
 
 
