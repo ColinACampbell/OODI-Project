@@ -89,6 +89,6 @@ public class Feedback {
     {
         if (user == null)
             return "";
-        return user.getEmail();
+        return user.getName();
     }
 }

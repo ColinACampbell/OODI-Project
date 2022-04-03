@@ -55,6 +55,6 @@ public class FeedbackReply {
     public String getName() {
         if (user == null)
             return null;
-        return user.getEmail();
+        return user.getName();
     }
 }
