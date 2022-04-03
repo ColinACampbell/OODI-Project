@@ -87,7 +87,6 @@ public class Feedback {
 
     public String getName()
     {
-        System.out.println(user);
         if (user == null)
             return "";
         return user.getEmail();
