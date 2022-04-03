@@ -67,10 +67,45 @@ export default {
       assetsPending: [],
       assetsApproved: [],
       assetsCompleted: [],
+      assetsSubmittedCounter: 0,
+      assetsPendingCounter: 0,
+      assetsApprovedCounter: 0,
+      assetsCompletedCounter: 0,
       viewAssets: [],
     }
   },
-  mounted(){
+  async mounted(){
+    let date = new Date()
+    this.date = date.toDateString()
+    let res = await AssetService.getAssets(store.getters.token)
+    if(res === "Failed to fetch"){
+      this.$router.push("/dashboard")
+    } else {
+      [...res.sent, ...res.received].forEach(asset => {
+        switch (asset.status) {
+          case "SUBMITTED":
+            this.assetsSubmittedCounter += 1
+            this.assetsSubmitted.push(asset)
+            break;
+          case "APPROVED":
+            this.assetsApprovedCounter += 1
+            this.assetsApproved.push(asset)
+            break;
+          case "PENDING":
+            this.assetsPendingCounter += 1
+            this.assetsPending.push(asset)
+            break;
+          case "COMPLETED":
+            this.assetsCompletedCounter += 1
+            this.assetsCompleted.push(asset)
+            break;
+          default:
+            break;
+        }
+      });
+
+    }
+
     const ctx = document.getElementById('myChart');
     ctx.fillStyle = 'transparent';
     new Chart(ctx, {
@@ -79,8 +114,7 @@ export default {
           labels: ['Submitted', 'Pending', 'Approved', 'Completed'],
           datasets: [{
               label: 'Asset Statuses',
-              // data: [3, 6, 8, 1],
-              data: [this.assetsSubmitted.length, this.assetsPending.length, this.assetsApproved.length,this.assetsCompleted.length],
+              data: [this.assetsSubmittedCounter, this.assetsPendingCounter, this.assetsApprovedCounter,this.assetsCompletedCounter],
               backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)',
@@ -108,38 +142,6 @@ export default {
     });
   },
 
-  beforeMount(){
-    let date = new Date()
-    this.date = date.toDateString()
-    AssetService.getAssets(store.getters.token)
-      .then(res => {
-        // console.log(res)
-        if(res === "Failed to fetch"){
-          this.$router.push("/dashboard")
-        } else {
-          [...res.sent, ...res.received].forEach(asset => {
-            switch (asset.status) {
-              case "SUBMITTED":
-                this.assetsSubmitted.push(asset)
-                break;
-              case "APPROVED":
-                this.assetsApproved.push(asset)
-                break;
-              case "PENDING":
-                this.assetsPending.push(asset)
-                break;
-              case "COMPLETED":
-                this.assetsCompleted.push(asset)
-                break;
-              default:
-                break;
-            }
-          });
-
-        }
-      }).catch(err => console.log(err))
-
-  }
 
  
 }

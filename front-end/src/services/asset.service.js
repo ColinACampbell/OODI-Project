@@ -104,6 +104,7 @@ export default {
     },
 
     async getFeedbacks(token, id){
+        console.log(id)
         let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/${id}`,
         {
             method: "GET",
@@ -113,10 +114,9 @@ export default {
             },
             
         })
-        console.log(await res.json())
-        // if(res.status === 200){
-        //     return await res.json()
-        // }
+        if(res.status === 200){
+            return await res.json()
+        }
         return "Failed to fetch"
        
     },

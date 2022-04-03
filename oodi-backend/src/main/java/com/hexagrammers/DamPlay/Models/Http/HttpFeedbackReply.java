@@ -42,5 +42,4 @@ public class HttpFeedbackReply  {
     public void setBody(String body) {
         this.body = body;
     }
-
 }

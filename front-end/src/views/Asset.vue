@@ -67,8 +67,8 @@
             <div v-if="assetFeedbacks.length == 0" class="no-view">There are no feedbacks on this asset.</div>
             <div v-for="feedback in assetFeedbacks" :key="feedback.id">
                 <div class="feedback-content">
-                    <p class="message">{{ feedback.message }}</p>
-                    <p class="msg-user">~{{ feedback.postedBy.name }}</p>
+                    <p class="message">{{ feedback.body }}</p>
+                    <!-- <p class="msg-user">~{{ feedback.postedBy.name }}</p> -->
                     <div class="btn">
                         <button @click="handleClick(feedback.id)" class="reply-btn">Reply</button>
                     </div>
@@ -143,6 +143,7 @@ export default {
   beforeMount(){
     AssetService.getAsset(store.getters.token, this.assetID)
         .then(res => {
+            // console.log(res)
             this.title = res.title
             this.description = res.description
             this.status = res.status.replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())
@@ -163,12 +164,12 @@ export default {
 
     AssetService.getFeedbacks(store.getters.token, this.assetID)
     .then(res => {
-        console.log(res)
-        // res.forEach(feedback =>{
-        //     if(feedback.asset.id === this.assetID){
-        //         this.assetFeedbacks.push(feedback)
-        //     }
-        // })
+        res.forEach(feedback =>{
+            console.log(feedback)
+            // if(feedback.asset.id === this.assetID){
+                this.assetFeedbacks.push(feedback)
+            // }
+        })
     })
     
   },
@@ -247,7 +248,7 @@ export default {
     },
     
     handleFeedback(){
-       let feedback = { message: this.feedback, title: "", assetId:this.assetID };
+       let feedback = { body: this.feedback, title: "", assetID:this.assetID };
        let wordCheck = this.feedback.split(" ")
         if(wordCheck.length > 500){
             this.error = "Words exceed 500"
@@ -269,13 +270,11 @@ export default {
     },
 
     setFeedbacks(){
-        AssetService.getFeedbacks(store.getters.token)
+        AssetService.getFeedbacks(store.getters.token, this.assetID)
         .then(res => {
             this.assetFeedbacks = []
             res.forEach(feedback =>{
-                if(feedback.asset.id === this.assetID){
-                    this.assetFeedbacks.push(feedback)
-                }
+                this.assetFeedbacks.push(feedback)
             })
         })
     },

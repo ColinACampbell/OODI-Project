@@ -29,6 +29,19 @@ public class FeedbackReply {
         this.feedback = feedback;
     }
 
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
     @JsonIgnore()
     public Feedback getFeedback() {
         return feedback;

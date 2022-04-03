@@ -29,7 +29,7 @@ public class Feedback {
     }
 
 
-    public Feedback(String title, String body){
+    public Feedback(String title,String body){
 
         this.title = title;
         this.body = body;
@@ -50,7 +50,6 @@ public class Feedback {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public int getId() {
         return id;
