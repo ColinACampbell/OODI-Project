@@ -10,13 +10,12 @@ import java.util.List;
 public class Notice {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue
     private Long id;
 
     private String title;
     private String message;
-    private String sender;
     private Long time;
-
 
     @ManyToOne()
     User user;
@@ -25,13 +24,11 @@ public class Notice {
 
     }
 
-    public Notice(String title, String message, String sender, Long time, User user){
+    public Notice(String title, String message, Long time, User user){
         this.title = title;
         this.message = message;
-        this.sender = sender;
         this.time = time;
         this.user = user;
-
     }
 
 
@@ -51,12 +48,8 @@ public class Notice {
         this.message = message;
     }
 
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
+    public User getSender() {
+        return user;
     }
 
     public Long getTime() {
@@ -67,9 +60,6 @@ public class Notice {
         this.time = time;
     }
 
-    public User getUser() {
-        return user;
-    }
 
     public void setUser(User creator) {
         this.user = creator;

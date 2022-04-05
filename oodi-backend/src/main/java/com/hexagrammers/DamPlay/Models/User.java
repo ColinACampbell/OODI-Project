@@ -114,6 +114,11 @@ public class User {
         this.feedbackReplies.add(feedbackReply);
     }
 
+
+    public void addNotice(Notice notice)
+    {
+        notices.add(notice);
+    }
     //public List<AssetRecipient> getAssetRecipients() {
     //    return assetRecipients;
     //}
