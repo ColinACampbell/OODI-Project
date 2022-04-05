@@ -16,4 +16,9 @@ public class NoticeManager {
         noticeRepository.save(notice);
     }
 
+    public Notice getNotice(int id)
+    {
+        return  noticeRepository.findById(id).get();
+    }
+
 }

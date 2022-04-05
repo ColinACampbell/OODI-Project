@@ -11,7 +11,7 @@ public class Notice {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue
-    private Long id;
+    private int id;
 
     private String title;
     private String message;
@@ -65,11 +65,11 @@ public class Notice {
         this.user = creator;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/notice")
@@ -36,5 +33,17 @@ public class NoticeController {
         userManager.updateUser(user);
 
         return new ResponseEntity<Notice>(notice, HttpStatus.CREATED);
+    }
+
+    @PutMapping("{id}")
+    ResponseEntity<?> updateNotice(@PathVariable("id") int noticeID, @RequestBody HttpNoticeBody noticeHttpBody)
+    {
+        Notice notice = noticeManager.getNotice(noticeID);
+
+        notice.setTitle(noticeHttpBody.getTitle());
+        notice.setMessage(noticeHttpBody.getMessage());
+        noticeManager.updateNotice(notice);
+
+        return new ResponseEntity<Notice>(notice, HttpStatus.OK);
     }
 }
