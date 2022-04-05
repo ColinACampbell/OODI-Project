@@ -1,9 +1,13 @@
 package com.hexagrammers.DamPlay.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity()
@@ -15,8 +19,9 @@ public class User {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private String username;
+    private String name;
     private String email;
+    private String position;
 
     @OneToMany(mappedBy = "sender")
     private List<Asset> assets;
@@ -25,22 +30,33 @@ public class User {
     private List<AssetRecipient> assetRecipients;
 
 
-    public User(String email, String username,String password)
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    List<Feedback> feedbacks = new ArrayList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user")
+    List<FeedbackReply> feedbackReplies = new ArrayList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user")
+    List<Notice> notices = new ArrayList<>();
+
+    public User(String email, String name,String password, String position)
     {
         this.email = email;
-        this.username = username;
+        this.name = name;
         this.password = password;
+        this.position = position;
     }
 
-    public User(String username,String password)
+    public User(String name,String password)
     {
-        this.username = username;
+        this.name = name;
         this.password = password;
     }
 
     public User()
     {
-
     }
 
     public void setId(int id) {
@@ -55,8 +71,8 @@ public class User {
         return password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public int getId() {
@@ -71,9 +87,34 @@ public class User {
         this.password = password;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public String getPosition() {
+        return position;
+    }
 
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    @JsonIgnore
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void addFeedback(Feedback feedback)
+    {
+        this.feedbacks.add(feedback);
+    }
+
+    public void addFeedbackReply(FeedbackReply feedbackReply)
+    {
+        this.feedbackReplies.add(feedbackReply);
+    }
+
+    //public List<AssetRecipient> getAssetRecipients() {
+    //    return assetRecipients;
+    //}
 }

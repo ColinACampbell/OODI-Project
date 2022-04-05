@@ -2,6 +2,8 @@ package com.hexagrammers.DamPlay.Models;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,6 @@ public class Feedback {
     private int id;
 
     private String title;
-    private int date;
     private String body;
 
     @OneToMany(mappedBy = "feedback")
@@ -23,18 +24,19 @@ public class Feedback {
     @ManyToOne()
     Asset asset;
 
+    @ManyToOne()
+    User user;
+
     public Feedback() {
         this.replies = new ArrayList<>();
     }
 
-
-    public Feedback(String title,String body,int date, Asset asset){
+    public Feedback(String title,String body,User user){
 
         this.title = title;
         this.body = body;
-        this.date = date;
         this.replies = new ArrayList<>();
-        this.asset = asset;
+        this.user = user;
     }
 
     public void setTitle(String title) {
@@ -45,8 +47,6 @@ public class Feedback {
         this.body = body;
     }
 
-
-
     public String getBody(){ return body;}
     public String getTitle(){return title;}
 
@@ -54,17 +54,8 @@ public class Feedback {
         this.id = id;
     }
 
-
     public int getId() {
         return id;
-    }
-
-    public int getDate() {
-        return date;
-    }
-
-    public void setDate(int date) {
-        this.date = date;
     }
 
     public List<FeedbackReply> getReplies() {
@@ -80,7 +71,24 @@ public class Feedback {
         this.replies.add(feedbackReply);
     }
 
+    @JsonIgnore
     public Asset getAsset() {
         return asset;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
+
+    public String getName()
+    {
+        if (user == null)
+            return "";
+        return user.getName();
     }
 }

@@ -8,7 +8,7 @@ const store = new createStore({
   },
   getters: {
       userName: state => state.userInfo.user.name,
-      userInfo: state => state.userInfo,
+      userInfo: state => state.userInfo.user,
       members: state => state.userInfo.members,
       token: state => state.userInfo.token,
       position: state => state.userInfo.user.position

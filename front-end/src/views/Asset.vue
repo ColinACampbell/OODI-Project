@@ -46,10 +46,10 @@
                     <label for="file">Link to File</label>
                     <input name="link"  type="url" v-model="link" :readonly="!isEditable"/>
                 </div>
-                <div>
+                <!-- <div>
                     <label for="file">File Uploaded</label>
                     <input name="file" class="custom-file-input" id="file" type="file" @change="handleFileUpload( $event )" v-if="isEditable"/>
-                </div>
+                </div> -->
                 <div class="buttons">
                     <div v-if="!(isEditable || changeStatus)" class="buttons">
                         <button @click="handleChange" id="change-status">Change Asset Status</button>
@@ -65,12 +65,12 @@
         <div class="feedback">
             <p class="feedback-header">Feedbacks</p>
             <div v-if="assetFeedbacks.length == 0" class="no-view">There are no feedbacks on this asset.</div>
-            <div v-for="feedback in assetFeedbacks" :key="feedback._id">
+            <div v-for="feedback in assetFeedbacks" :key="feedback.id">
                 <div class="feedback-content">
                     <p class="message">{{ feedback.message }}</p>
                     <p class="msg-user">~{{ feedback.postedBy.name }}</p>
                     <div class="btn">
-                        <button @click="handleClick(feedback._id)" class="reply-btn">Reply</button>
+                        <button @click="handleClick(feedback.id)" class="reply-btn">Reply</button>
                     </div>
                 </div>
                 <ul class="replies">
@@ -78,8 +78,8 @@
                         <p class="message">{{ reply.message }}</p>
                         <p class="msg-user">~{{ reply.postedBy.name }}</p>
                     </li>
-                    <li v-if="showReplyInput && replySelected === feedback._id">
-                        <form id="create-feedback-form" method="post" @submit.prevent="handleFeedbackReply(feedback._id)">
+                    <li v-if="showReplyInput && replySelected === feedback.id">
+                        <form id="create-feedback-form" method="post" @submit.prevent="handleFeedbackReply(feedback.id)">
                             <div>
                                 <textarea name="feedback" id="feedbacktxt" cols="30" rows="10" v-model="feedbackReply" required></textarea>
                                 <span>{{errorreply}}</span>
@@ -145,29 +145,30 @@ export default {
         .then(res => {
             this.title = res.title
             this.description = res.description
-            this.status = AssetService.capitaliseFirstLetter(res.status)
+            this.status = res.status.replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())
             this.link = res.assetLink
-            this.isSender = store.getters.userInfo.user._id === res.sender
-            this.reviewDate = res.reviewBy
-            this.recipients.forEach(recipient => {
-                if(res.recipients.includes(recipient._id)){
-                    this.receiverNames.push(recipient.name)
-                }
+            this.isSender = store.getters.userInfo.id === res.sender.id
+            this.reviewDate = res.reviewedBy
+            this.senderName = res.sender.name
 
-                if(recipient._id === res.sender){
-                    this.senderName = recipient.name
+
+            let recipientsId = res.recipients.map(recipient => recipient.recipient.id)
+            this.recipients.forEach(recipient => {
+                if(recipientsId.includes(recipient.id)){
+                    this.receiverNames.push(recipient.name)
                 }
             });
 
-        })
+        }).catch(err => console.log(err))
 
-    AssetService.getFeedbacks(store.getters.token)
+    AssetService.getFeedbacks(store.getters.token, this.assetID)
     .then(res => {
-        res.forEach(feedback =>{
-            if(feedback.asset._id === this.assetID){
-                this.assetFeedbacks.push(feedback)
-            }
-        })
+        console.log(res)
+        // res.forEach(feedback =>{
+        //     if(feedback.asset.id === this.assetID){
+        //         this.assetFeedbacks.push(feedback)
+        //     }
+        // })
     })
     
   },
@@ -177,32 +178,31 @@ export default {
         if(confirm){
             this.recipients.forEach(recipient => {
                 if(this.receiverNames.includes(recipient.name)){
-                    this.receivers.push(recipient._id)
+                    this.receivers.push(recipient.id)
                 }
             });
             let asset = {
-                status: this.status,
-                fileData: this.file,
-                type: this.type,
+                status: this.status.toUpperCase(),
                 title: this.title,
                 description: this.description,
-                sender: this.senderName,
-                reviewBy: this.reviewDate,
+                reviewedBy: this.reviewDate,
                 assetLink: this.link,
-                recipients: [...this.receivers]
+                assetRecipients: [...this.receivers]
             }
+
 
             AssetService.uploadChanges(store.getters.token, this.assetID, asset)
                 .then(res => {
                     if(res === "Title duplication"){
                         this.error = "Title already exists in the system."
                     } else {
-                        alert(res === "Failed to update" ? 
-                            "Asset failed to update. Try Again." :
-                            "Asset was succesfully updated!"
-                        )
-                        this.isEditable = false
-                        this.changeStatus = false
+                        if(res === "Failed to update"){
+                           this.error = "Asset failed to update. Try Again."
+                        }else{
+                            alert("Asset was succesfully updated!")
+                            this.isEditable = false
+                            this.changeStatus = false
+                        }
                     }
                 })
         }
@@ -229,20 +229,17 @@ export default {
         .then(res => {
             this.title = res.title
             this.description = res.description
-            this.status = AssetService.capitaliseFirstLetter(res.status)
+            this.status = res.status.replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())
             this.initalStatus = this.status
             this.link = res.assetLink
             this.receivers = []
             this.receiverNames = []
-            this.reviewDate = res.reviewBy
-            this.isSender = store.getters.userInfo.user._id === res.sender
+            this.reviewDate = res.reviewedBy
+            this.isSender = store.getters.userInfo.id === res.sender.id
+            let recipientsId = res.recipients.map(recipient => recipient.recipient.id)
             this.recipients.forEach(recipient => {
-                if(res.recipients.includes(recipient._id)){
+                if(recipientsId.includes(recipient.id)){
                     this.receiverNames.push(recipient.name)
-                }
-
-                if(recipient._id === res.sender){
-                    this.senderName = recipient.name
                 }
             });
 
@@ -276,7 +273,7 @@ export default {
         .then(res => {
             this.assetFeedbacks = []
             res.forEach(feedback =>{
-                if(feedback.asset._id === this.assetID){
+                if(feedback.asset.id === this.assetID){
                     this.assetFeedbacks.push(feedback)
                 }
             })

@@ -18,9 +18,10 @@ export default {
             })
 
         let data = await res.json()
-        if(res.status === 401){
+        if(res.status !== 200){
             return "Invalid login"
         }else{
+            // console.log(data)
             return data
         }
        
@@ -51,8 +52,8 @@ export default {
                 body: JSON.stringify(info)
             }
         )
-        let data = res.json()
         
-        return data
+        
+        return res.status
     }, 
 }

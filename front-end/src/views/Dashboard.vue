@@ -4,7 +4,6 @@
             <div>
                 <img id="logo" src="../assets/ipp-white.png" alt="IPP Logo"/>
             </div>
-            <!-- <div class="greetings">Hello, {{ name }}</div> -->
             <ul class="nav-list">
                 <li class="nav-item" :class="current === 'Home' ? 'active' : ''">
                     <router-link to="/dashboard" @click="current = 'Home'">

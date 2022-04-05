@@ -1,8 +1,5 @@
 package com.hexagrammers.DamPlay.Models;
 
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +11,21 @@ public class Asset {
     @GeneratedValue
     private int id;
 
-    String title;
-    String description;
-    String assetLink;
+    private String title;
+    private String description;
+    private String assetLink;
+    private AssetStatus status;
 
-    String reviewedBy;
+    private String reviewedBy;
 
     @ManyToOne()
-    User sender;
+    private User sender;
 
     @OneToMany(mappedBy = "asset")
-    List<AssetRecipient> recipients;
+    private List<AssetRecipient> recipients;
+
+    @OneToMany(mappedBy = "asset")
+    private List<AssetStatusHistory> history;
 
     @OneToMany(mappedBy = "asset")
     List<Feedback> feedbacks;
@@ -41,9 +42,9 @@ public class Asset {
         this.assetLink = assetLink;
         this.reviewedBy = reviewedBy;
         this.recipients = new ArrayList<>();
+        this.history = new ArrayList<>();
         this.feedbacks = new ArrayList<>();
     }
-
 
     public void setAssetLink(String assetLink) {
         this.assetLink = assetLink;
@@ -102,6 +103,27 @@ public class Asset {
         return id;
     }
 
+    public AssetStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AssetStatus assetStatus) {
+        this.status = assetStatus;
+    }
+
+    public List<AssetStatusHistory> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<AssetStatusHistory> history) {
+        this.history = history;
+    }
+
+    public  void addHistory(AssetStatusHistory history)
+    {
+        this.history.add(history);
+    }
+    
     public List<Feedback> getFeedbacks() {
         return feedbacks;
     }

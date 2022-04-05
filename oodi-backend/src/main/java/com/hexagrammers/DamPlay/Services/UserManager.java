@@ -12,7 +12,7 @@ public class UserManager {
     @Autowired
     UserRepository repository;
 
-    public void createUser(User user)
+    public void updateUser(User user)
     {
         repository.save(user);
     }

@@ -1,10 +1,9 @@
 package com.hexagrammers.DamPlay.Controllers;
 
-import com.hexagrammers.DamPlay.Models.Asset;
-import com.hexagrammers.DamPlay.Models.AssetRecipient;
+import com.hexagrammers.DamPlay.AuthorizationException;
+import com.hexagrammers.DamPlay.Models.*;
+import com.hexagrammers.DamPlay.Models.Http.AssetResponseBody;
 import com.hexagrammers.DamPlay.Models.Http.HttpAssetBody;
-import com.hexagrammers.DamPlay.Models.PrincipalUserDetails;
-import com.hexagrammers.DamPlay.Models.User;
 import com.hexagrammers.DamPlay.Services.AssetManager;
 import com.hexagrammers.DamPlay.Services.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +19,36 @@ import java.util.List;
 public class AssetController {
 
     @Autowired
-    UserManager userManager;
+    private UserManager userManager;
 
     @Autowired
-    AssetManager assetManager;
+    private AssetManager assetManager;
 
     @GetMapping("")
-    public List<Asset> getAssets()
+    public AssetResponseBody getAssets(Authentication authentication)
     {
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+        List<Asset> sentAssets = assetManager.getSentAssets(userDetails.getUser().getId());
+        List<Asset> receivedAssets = assetManager.getReceivedAssets(userDetails.getUser().getId());
 
-        return assetManager.getAssets();
+        return new AssetResponseBody(sentAssets,receivedAssets);
+        // return assetManager.getAssets();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteAsset(@PathVariable("id") int assetID, Authentication authentication) {
+
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+        try
+        {
+            assetManager.deleteAsset(assetID,userDetails.getUser().getId());
+        } catch (AuthorizationException authorizationException)
+        {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+        
     }
 
     @GetMapping("{id}")
@@ -39,20 +58,36 @@ public class AssetController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Asset> updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody)
+    public ResponseEntity<Asset> updateAsset(@PathVariable("id") int assetId, @RequestBody() Asset assetBody,Authentication authentication)
     {
-        Asset asset = assetManager.getAsset(assetId);
+        Asset asset = assetManager.getAsset(assetId); // get the asset from the database to an object
 
         if (asset == null) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); // better response
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); // TODO better response
         }
 
+        // - We update the info on an asset
         asset.setTitle(assetBody.getTitle());
         asset.setDescription(assetBody.getDescription());
         asset.setReviewedBy(assetBody.getReviewedBy());
 
+        System.out.println(assetBody.getStatus());
+
+        // Store the old status
+        AssetStatus oldStatus = asset.getStatus();
+
+        asset.setStatus(assetBody.getStatus());
 
         assetManager.updateAsset(asset);
+
+        // - Check if the current asset status is different from the old status
+        if (!oldStatus.equals(assetBody.getStatus()))
+        {
+            // - If so just add it to history
+            PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+            assetManager.addAssetStatusHistory(asset.getStatus(),asset,userDetails.getUser());
+        }
+
 
         return new ResponseEntity<>(asset,HttpStatus.OK);
     }
@@ -61,14 +96,18 @@ public class AssetController {
     public ResponseEntity<Asset> createAsset(@RequestBody HttpAssetBody assetBody, Authentication authentication)
     {
 
+        // - Manually create an asset from the http request body (REST)
         Asset asset = new Asset(assetBody.getTitle(),assetBody.getDescription(),assetBody.getAssetLink(),assetBody.getReviewedBy());
+        asset.setStatus(assetBody.getStatus());
 
-        // Get the user from the authentication layer
+        // - Get the user from the security layer who created the asset
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
         asset.setSender(userDetails.getUser());
 
+        // - We use update asset to add the asset into the database
         assetManager.updateAsset(asset);
 
+        // - We find all the users who are to receive the asset
         for (int userId : assetBody.getAssetRecipients())
         {
             User user = userManager.findById(userId);
@@ -80,12 +119,14 @@ public class AssetController {
             assetRecipient.setReceivedAsset(asset);
 
             assetManager.saveRecipient(assetRecipient);
-            asset.addRecipient(assetRecipient);
+            asset.addRecipient(assetRecipient); // - We relate each user to the asset using the asset recipient class
         }
 
-        assetManager.updateAsset(asset);
+        assetManager.updateAsset(asset); // - Then we update the asset, to save the changes made earlier to the class in the database
         Asset newAsset = assetManager.getAsset(asset.getId()); // TODO: Reduce this transaction
 
-        return new ResponseEntity<Asset>(newAsset, HttpStatus.CREATED);
+        assetManager.addAssetStatusHistory(asset.getStatus(),asset,userDetails.getUser()); // Add the status history to the asset
+
+        return new ResponseEntity<Asset>(newAsset, HttpStatus.CREATED); // - we return the asset created
     }
 }

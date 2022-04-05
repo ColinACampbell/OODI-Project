@@ -53,6 +53,7 @@ export default {
         return "Failed to upload"
         
     },
+    
     async processNotice(notice, token){
 
         let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/notice/`,

@@ -2,17 +2,20 @@ package com.hexagrammers.DamPlay.Controllers;
 
 import com.hexagrammers.DamPlay.Models.*;
 import com.hexagrammers.DamPlay.Models.Http.HttpFeedbackBody;
+import com.hexagrammers.DamPlay.Models.Http.HttpFeedbackReply;
 import com.hexagrammers.DamPlay.Services.AssetManager;
 import com.hexagrammers.DamPlay.Services.FeedbackManager;
+import com.hexagrammers.DamPlay.Services.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/feeback")
+@RequestMapping("/api/feedback")
 public class FeedbackController {
 
     @Autowired
@@ -21,14 +24,44 @@ public class FeedbackController {
     @Autowired
     AssetManager assetManager;
 
+
+    @Autowired
+    UserManager userManager;
+
+    @PostMapping("")
+    public ResponseEntity<Feedback> createFeedback(@RequestBody HttpFeedbackBody feedbackBody, Authentication authentication)
+    {
+
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+
+        User user = userDetails.getUser();
+
+        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody(),user);
+
+        // Get the asset from the asset id using the asset manager
+        Asset asset = assetManager.getAsset(feedbackBody.getAssetID());
+        feedback.setAsset(asset);
+
+        feedbackManager.updateFeedback(feedback);
+
+        asset.addFeedbackReply(feedback);
+
+        assetManager.updateAsset(asset);
+
+        user.addFeedback(feedback);
+        userManager.updateUser(user);
+
+        return new ResponseEntity<Feedback>(feedback, HttpStatus.CREATED);
+    }
+
     @GetMapping("{assetID}")
     public List<Feedback> getFeedbacks(@PathVariable("assetID") int assetID)
     {
-        // Write code to get all the feedbacks for an asset
         Asset asset = assetManager.getAsset(assetID);
-        return (List<Feedback>) feedbackManager.getFeedback(asset);
+        return feedbackManager.getFeedbacks(asset);
     }
 
+    // TODO : Review
     @PutMapping("{id}")
     public ResponseEntity<Feedback> updateFeedback(@PathVariable("id") int feedbackId, @RequestBody() Feedback feedbackBody)
     {
@@ -46,21 +79,30 @@ public class FeedbackController {
         return new ResponseEntity<>(feedback,HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Feedback> createFeedback(@RequestBody HttpFeedbackBody feedbackBody)
+    @PostMapping("/reply")
+    public ResponseEntity<FeedbackReply> createFeedbackReply(@RequestBody HttpFeedbackReply httpFeedbackReplyBody, Authentication authentication)
     {
-        // Get the asset from the asset id using the asset manager
-        // Remove the placeholder asset and pass the correct asset using
-        Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody(),feedbackBody.getId(), new Asset());
+
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
+
+        Feedback feedback = feedbackManager.getFeedback(httpFeedbackReplyBody.getFeedbackID());
+
+        if (feedback == null)
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
+
+        FeedbackReply feedbackReply = new FeedbackReply(httpFeedbackReplyBody.getTitle(),httpFeedbackReplyBody.getBody(),user);
+        feedback.addFeedbackReply(feedbackReply);
+        feedbackReply.setFeedback(feedback);
 
         feedbackManager.updateFeedback(feedback);
+        feedbackManager.saveReply(feedbackReply);
 
-        Feedback newFeedback = feedbackManager.getFeedback(feedback.getId());
+        user.addFeedbackReply(feedbackReply);
+        userManager.updateUser(user);
 
-        return new ResponseEntity<Feedback>(newFeedback, HttpStatus.CREATED);
+        return new ResponseEntity<>(feedbackReply,HttpStatus.CREATED);
     }
-
-
-
 
 }

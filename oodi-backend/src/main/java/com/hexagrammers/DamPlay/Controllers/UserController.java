@@ -29,25 +29,21 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody User user)
     {
-
         if (userManager.findByEmail(user.getEmail()) != null)
         {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // Encrypt the user password on creation
-        userManager.createUser(user);
+        userManager.updateUser(user);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(user,HttpStatus.CREATED);
 
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User userBody)
     {
-
-        System.out.println(userBody.getPassword());
-        System.out.println(userBody.getUsername());
 
         User user = userManager.findByEmail(userBody.getEmail());
         if (user == null)

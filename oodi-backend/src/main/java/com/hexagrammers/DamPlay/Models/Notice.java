@@ -17,16 +17,12 @@ public class Notice {
     private String sender;
     private Long time;
 
-    @OneToMany(mappedBy = "notices")
 
-    private List<User> notices;
     @ManyToOne()
     User user;
 
-
-
     public Notice() {
-        this.notice = new ArrayList<>();
+
     }
 
     public Notice(String title, String message, String sender, Long time, User user){
@@ -35,19 +31,9 @@ public class Notice {
         this.sender = sender;
         this.time = time;
         this.user = user;
-        this.notice = new ArrayList<>();
-
-
 
     }
 
-    public List<User> getNotices() {
-        return notices;
-    }
-
-    public void setNotices(List<User> notices) {
-        this.notices = notices;
-    }
 
     public String getTitle() {
         return title;
