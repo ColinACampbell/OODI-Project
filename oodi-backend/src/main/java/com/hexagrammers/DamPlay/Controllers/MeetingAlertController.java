@@ -103,4 +103,14 @@ public class MeetingAlertController {
         meetingAlertManager.updateMeetingAlert(meetingAlert);
         return meetingAlert;
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteMeetingAlert(@PathVariable("id") int id)
+    {
+        MeetingAlert meetingAlert = meetingAlertManager.getMeetingAlert(id);
+        meetingAlertManager.deleteMeetingAttendeesByMeetingAlert(meetingAlert);
+        meetingAlertManager.deleteMeetingAlert(meetingAlert);
+
+        return new ResponseEntity<>(meetingAlertManager.getMeetingAlerts(),HttpStatus.OK);
+    }
 }

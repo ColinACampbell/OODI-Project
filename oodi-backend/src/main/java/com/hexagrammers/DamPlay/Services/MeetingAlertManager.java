@@ -37,6 +37,11 @@ public class MeetingAlertManager {
         return meetingAlertRepository.findById(id).get();
     }
 
+
+    public void deleteMeetingAlert(MeetingAlert meetingAlert)
+    {
+        meetingAlertRepository.delete(meetingAlert);
+    }
     public void deleteMeetingAttendeesByMeetingAlert(MeetingAlert meetingAlert)
     {
         meetingAttendeeRepository.deleteMeetingAttendeesById(meetingAlert.getId());
