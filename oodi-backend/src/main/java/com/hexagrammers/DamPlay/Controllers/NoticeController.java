@@ -46,4 +46,16 @@ public class NoticeController {
 
         return new ResponseEntity<Notice>(notice, HttpStatus.OK);
     }
+
+    /* Get All Notice Method*/
+    @GetMapping("")
+    ResponseEntity<?> getAllNotice(@RequestBody HttpNoticeBody noticeHttpBody, Authentication authentication)
+    {
+        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
+        Notice notice = new Notice(noticeHttpBody.getTitle(), noticeHttpBody.getMessage(), noticeHttpBody.getTime(), user);
+        noticeManager.getAllNotice(notice);
+
+        return new ResponseEntity<Notice>(notice, HttpStatus.CREATED);
+    }
 }

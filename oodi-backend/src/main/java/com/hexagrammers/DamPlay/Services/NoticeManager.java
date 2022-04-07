@@ -11,6 +11,7 @@ public class NoticeManager {
     @Autowired
     NoticeRepository noticeRepository;
 
+
     public void updateNotice(Notice notice)
     {
         noticeRepository.save(notice);
@@ -19,6 +20,12 @@ public class NoticeManager {
     public Notice getNotice(int id)
     {
         return  noticeRepository.findById(id).get();
+    }
+
+    /* Get All Notice Method*/
+    public void getAllNotice(Notice notice){
+
+        new Notice(notice.getTitle(), notice.getMessage(), notice.getTime(), notice.getSender());
     }
 
 }
