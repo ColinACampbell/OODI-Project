@@ -121,9 +121,9 @@ export default {
        
     },
 
-    async postFeedbackReply(reply, token, id){
+    async postFeedbackReply(reply, token){
 
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/feedback/${id}/reply`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/reply`,
             {
                 method: "POST",
                 body: JSON.stringify(reply),
@@ -135,7 +135,7 @@ export default {
             }
         )
             
-        if(res.status === 200){
+        if(res.status === 201){
             return "Successful"
         }
 

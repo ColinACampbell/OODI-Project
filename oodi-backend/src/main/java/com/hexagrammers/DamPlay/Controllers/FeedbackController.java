@@ -56,7 +56,6 @@ public class FeedbackController {
     @GetMapping("{assetID}")
     public List<Feedback> getFeedbacks(@PathVariable("assetID") int assetID)
     {
-        System.out.println(assetID);
         Asset asset = assetManager.getAsset(assetID);
         return feedbackManager.getFeedbacks(asset);
     }
@@ -99,12 +98,8 @@ public class FeedbackController {
         feedbackManager.updateFeedback(feedback);
         feedbackManager.saveReply(feedbackReply);
 
-<<<<<<< HEAD
-        System.out.println(feedbackReply);
-=======
         user.addFeedbackReply(feedbackReply);
         userManager.updateUser(user);
->>>>>>> d0ea15a42cc2960b6d12cf1444464a5c696b7479
 
         return new ResponseEntity<>(feedbackReply,HttpStatus.CREATED);
     }
