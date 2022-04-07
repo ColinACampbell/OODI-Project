@@ -1,6 +1,9 @@
 package com.hexagrammers.DamPlay.Controllers;
 
 import com.hexagrammers.DamPlay.Models.Http.HttpNoticeBody;
+
+import java.util.List;
+
 import com.hexagrammers.DamPlay.Models.Notice;
 import com.hexagrammers.DamPlay.Models.PrincipalUserDetails;
 import com.hexagrammers.DamPlay.Models.User;
@@ -49,13 +52,8 @@ public class NoticeController {
 
     /* Get All Notice Method*/
     @GetMapping("")
-    ResponseEntity<?> getAllNotice(@RequestBody HttpNoticeBody noticeHttpBody, Authentication authentication)
+    public List<Notice> getAllNotice()
     {
-        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
-        User user = userDetails.getUser();
-        Notice notice = new Notice(noticeHttpBody.getTitle(), noticeHttpBody.getMessage(), noticeHttpBody.getTime(), user);
-        noticeManager.getAllNotice(notice);
-
-        return new ResponseEntity<Notice>(notice, HttpStatus.CREATED);
+        return noticeManager.getAllNotice();
     }
 }

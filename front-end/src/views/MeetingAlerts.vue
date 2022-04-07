@@ -99,7 +99,7 @@ export default {
         isEditable: false,
         isCreator: store.getters.position == "Coach" || store.getters.position == "Chief Executive Officer",
         userName: store.getters.userName,
-        userID: store.getters.userInfo.user._id,
+        userID: store.getters.userInfo.id,
         error: "",
         recipients: store.getters.members,
     }
@@ -107,6 +107,7 @@ export default {
   beforeMount(){
     MeetingService.getMeetingAlerts(store.getters.token)
     .then(res => {
+        console.log(res)
         res.forEach(alert => {
             alert.attendeeNames = alert.attendees
             if(alert.sender._id === this.userID){

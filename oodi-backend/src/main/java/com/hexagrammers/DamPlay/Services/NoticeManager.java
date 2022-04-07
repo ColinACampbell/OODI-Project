@@ -4,6 +4,7 @@ import com.hexagrammers.DamPlay.Models.Notice;
 import com.hexagrammers.DamPlay.Repositories.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class NoticeManager {
@@ -23,9 +24,9 @@ public class NoticeManager {
     }
 
     /* Get All Notice Method*/
-    public void getAllNotice(Notice notice){
-
-        new Notice(notice.getTitle(), notice.getMessage(), notice.getTime(), notice.getSender());
+    public List<Notice> getAllNotice(){
+        return (List<Notice>) noticeRepository.findAll();
+        // new Notice(notice.getTitle(), notice.getMessage(), notice.getTime(), notice.getSender());
     }
 
 }

@@ -71,7 +71,7 @@ export default {
         senderName: "",
         position: store.getters.position,
         error: "",
-        userID: store.getters.userInfo.user._id,
+        userID: store.getters.userInfo.id,
         noticeSelected: "",
         recipients: store.getters.members,
     }
@@ -79,15 +79,17 @@ export default {
   beforeMount(){
     NoticeService.getNotices(store.getters.token)
     .then(res => {
-        res.forEach(notice => {
-            let date = new Date(+notice.time)
-            notice.time = date.toDateString()
-            if(notice.sender._id === this.userID){
-                this.noticesCreated.push(notice)
-            }else{
-                this.noticesPosted.push(notice)
-            }
-        });
+        console.log(store.getters.userInfo)
+        console.log(res)
+        // res.forEach(notice => {
+        //     // let date = new Date(+notice.time)
+        //     // notice.time = date.toDateString()
+        //     // if(notice.sender._id === this.userID){
+        //     //     this.noticesCreated.push(notice)
+        //     // }else{
+        //     //     this.noticesPosted.push(notice)
+        //     // }
+        // });
     })
   },
 

@@ -31,7 +31,7 @@
                             :disabled="option < options.indexOf(status)"
                             
                         >
-                            {{option}}
+                            {{options[option]}}
                         </option>
                     </select>
                     <div v-if="!isEditable && !changeStatus" :class="status">{{ status }}</div>
