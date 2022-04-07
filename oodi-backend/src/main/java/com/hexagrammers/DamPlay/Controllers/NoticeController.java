@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/notice")
 public class NoticeController {
@@ -49,13 +51,14 @@ public class NoticeController {
 
     /* Get All Notice Method*/
     @GetMapping("")
-    ResponseEntity<?> getAllNotice(@RequestBody HttpNoticeBody noticeHttpBody, Authentication authentication)
+    public List<Notice> getAllNotices()
     {
-        PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
-        User user = userDetails.getUser();
-        Notice notice = new Notice(noticeHttpBody.getTitle(), noticeHttpBody.getMessage(), noticeHttpBody.getTime(), user);
-        noticeManager.getAllNotice(notice);
+        return noticeManager.getAllNotices();
+    }
 
-        return new ResponseEntity<Notice>(notice, HttpStatus.CREATED);
+    @GetMapping("{id}")
+    public Notice getNotice(@PathVariable("id") int id)
+    {
+        return noticeManager.getNotice(id);
     }
 }
