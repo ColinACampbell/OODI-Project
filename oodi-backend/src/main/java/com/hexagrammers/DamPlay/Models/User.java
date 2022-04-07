@@ -37,6 +37,17 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<FeedbackReply> feedbackReplies = new ArrayList<>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user")
+    List<Notice> notices = new ArrayList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "sender")
+    List<MeetingAlert> meetingAlerts = new ArrayList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user")
+    List<MeetingAttendee> meetingAttendees = new ArrayList<>();
 
     public User(String email, String name,String password, String position)
     {
@@ -109,6 +120,22 @@ public class User {
     public void addFeedbackReply(FeedbackReply feedbackReply)
     {
         this.feedbackReplies.add(feedbackReply);
+    }
+
+
+    public void addNotice(Notice notice)
+    {
+        notices.add(notice);
+    }
+
+    public void addMeetingAlerts(MeetingAlert meetingAlert)
+    {
+        meetingAlerts.add(meetingAlert);
+    }
+
+    public void addMeetingAttendee(MeetingAttendee meetingAttendee)
+    {
+        this.meetingAttendees.add(meetingAttendee);
     }
 
     //public List<AssetRecipient> getAssetRecipients() {
