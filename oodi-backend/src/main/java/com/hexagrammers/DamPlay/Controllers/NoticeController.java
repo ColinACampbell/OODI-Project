@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/notice")
 public class NoticeController {
@@ -45,5 +47,18 @@ public class NoticeController {
         noticeManager.updateNotice(notice);
 
         return new ResponseEntity<Notice>(notice, HttpStatus.OK);
+    }
+
+    /* Get All Notice Method*/
+    @GetMapping("")
+    public List<Notice> getAllNotices()
+    {
+        return noticeManager.getAllNotices();
+    }
+
+    @GetMapping("{id}")
+    public Notice getNotice(@PathVariable("id") int id)
+    {
+        return noticeManager.getNotice(id);
     }
 }
