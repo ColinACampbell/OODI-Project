@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface FeedbackRepository extends CrudRepository<Feedback,Integer> {
     List<Feedback> findByAsset(Asset asset);
+
+    @Override
+    void delete(Feedback entity);
 }

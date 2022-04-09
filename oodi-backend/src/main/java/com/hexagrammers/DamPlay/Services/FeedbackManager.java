@@ -35,6 +35,17 @@ public class FeedbackManager {
         return (List<Feedback>) feedbackRepository.findByAsset(asset);
     }
 
+
+    public void deleteFeedback(int id)
+    {
+        feedbackRepository.deleteById(id);
+    }
+
+    public void deleteFeedbackReply(int id)
+    {
+        feedbackReplyRepository.deleteById(id);
+    }
+
     public void saveReply(FeedbackReply feedbackReply)
     {
         feedbackReplyRepository.save(feedbackReply);
