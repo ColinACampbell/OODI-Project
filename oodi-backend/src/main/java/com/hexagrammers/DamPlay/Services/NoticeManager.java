@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+import java.util.List;
+
 @Service
 public class NoticeManager {
 
@@ -24,9 +26,8 @@ public class NoticeManager {
     }
 
     /* Get All Notice Method*/
-    public List<Notice> getAllNotice(){
+    public List<Notice> getAllNotices(){
         return (List<Notice>) noticeRepository.findAll();
-        // new Notice(notice.getTitle(), notice.getMessage(), notice.getTime(), notice.getSender());
     }
 
 }

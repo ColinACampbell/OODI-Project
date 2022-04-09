@@ -10,7 +10,13 @@
             </div>
             <div>
                 <label for="dateTime">Meeting Date and Time</label>
-                <input type="datetime-local" name="dateTime" id="dateTime" v-model="dateTime" required>
+                <input 
+                    type="datetime-local" 
+                    name="dateTime" i
+                    d="dateTime" 
+                    v-model="dateTime" 
+                    required
+                >
             </div>
             <div>
                 <label for="file">Link to Meeting</label>
@@ -51,7 +57,7 @@ export default {
         link: "",
         dateTime: "",
         recipients: store.getters.members,
-        userID: store.getters.userInfo.user._id,
+        userID: store.getters.userInfo.id,
         receivers: [],
         receiverNames: [],
         error: "",
@@ -64,7 +70,7 @@ export default {
     handleSubmit(){
         this.recipients.forEach(recipient => {
             if(this.receiverNames.includes(recipient.name)){
-                this.receivers.push(recipient._id)
+                this.receivers.push(recipient.id)
             }
         });
         let meeting = {

@@ -9,10 +9,9 @@ export default {
             },
             
         })
-        // if(res.status === 200){
-        //     return await res.json()
-        // }
-        console.log(await res.json())
+        if(res.status === 200){
+            return await res.json()
+        }
         return "Failed to fetch"
            
     }, 

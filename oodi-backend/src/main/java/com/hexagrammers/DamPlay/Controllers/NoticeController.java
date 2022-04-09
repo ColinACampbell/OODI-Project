@@ -15,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("api/notice")
+@RequestMapping("/api/notice")
 public class NoticeController {
 
     @Autowired
@@ -52,8 +54,14 @@ public class NoticeController {
 
     /* Get All Notice Method*/
     @GetMapping("")
-    public List<Notice> getAllNotice()
+    public List<Notice> getAllNotices()
     {
-        return noticeManager.getAllNotice();
+        return noticeManager.getAllNotices();
+    }
+
+    @GetMapping("{id}")
+    public Notice getNotice(@PathVariable("id") int id)
+    {
+        return noticeManager.getNotice(id);
     }
 }
