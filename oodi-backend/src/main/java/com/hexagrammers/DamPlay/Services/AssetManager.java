@@ -23,6 +23,9 @@ public class AssetManager {
     @Autowired
     private AssetStatusRepository assetStatusRepository;
 
+    @Autowired
+    private FeedbackManager feedbackManager;
+
     public void updateAsset(Asset asset)
     {
         assetRepository.save(asset);
@@ -60,13 +63,26 @@ public class AssetManager {
 
     public void deleteAsset(int assetID,int userID) throws AuthorizationException
     {
-        Asset asset = assetRepository.findById(userID).get();
+        Asset asset = assetRepository.findById(assetID).get();
+
+
+
 
         if (asset.getSender().getId() != userID)
         {
             throw new AuthorizationException("");
         } else
         {
+
+            for (Feedback feedback : asset.getFeedbacks())
+            {
+                for (FeedbackReply feedbackReply : feedback.getReplies())
+                {
+                    feedbackManager.deleteFeedbackReply(feedbackReply.getId());
+                }
+                feedbackManager.deleteFeedback(feedback.getId());
+            }
+
             assetRecipientRepository.deleteAssetRecipientsByAssetId(assetID);
             assetStatusRepository.deleteAssetHistriesByAssetId(assetID);
             assetRepository.deleteById(assetID);

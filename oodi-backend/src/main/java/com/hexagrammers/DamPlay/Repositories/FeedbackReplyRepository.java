@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FeedbackReplyRepository extends CrudRepository<FeedbackReply,Integer> {
+    @Override
+    void deleteById(Integer integer);
 }
