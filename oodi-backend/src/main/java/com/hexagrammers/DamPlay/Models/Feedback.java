@@ -85,7 +85,7 @@ public class Feedback {
         return user;
     }
 
-    public String getName()
+    public String getWrittenBy()
     {
         if (user == null)
             return "";
