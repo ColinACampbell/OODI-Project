@@ -33,6 +33,11 @@ public class FeedbackManager {
         return feedbackRepository.findByTitle(title);
     }
 
+    public FeedbackReply getFeedbackReply(String title)
+    {
+        return feedbackReplyRepository.findByTitle(title);
+    }
+
     public List<Feedback> getFeedbacks(Asset asset)
     {
 

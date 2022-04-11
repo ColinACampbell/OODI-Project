@@ -69,9 +69,6 @@ public class FeedbackController {
     public ResponseEntity<Feedback> updateFeedback(@PathVariable("id") int feedbackId, @RequestBody() Feedback feedbackBody)
     {
 
-        if (feedbackManager.getFeedback(feedbackBody.getTitle()) != null)
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-
         Feedback feedback = feedbackManager.getFeedback(feedbackId);
 
         if (feedback == null) {
@@ -89,6 +86,8 @@ public class FeedbackController {
     @PostMapping("/reply")
     public ResponseEntity<FeedbackReply> createFeedbackReply(@RequestBody HttpFeedbackReply httpFeedbackReplyBody, Authentication authentication)
     {
+        if (feedbackManager.getFeedbackReply(httpFeedbackReplyBody.getTitle()) != null)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
