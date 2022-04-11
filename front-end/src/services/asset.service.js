@@ -59,7 +59,6 @@ export default {
             },
             
         })
-        console.log(await res.json())
         return res.status === 200
        
     },
