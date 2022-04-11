@@ -29,6 +29,10 @@ public class FeedbackManager {
         return (Feedback) feedbackRepository.findById(id).get();
     }
 
+    public Feedback getFeedback(String title) {
+        return feedbackRepository.findByTitle(title);
+    }
+
     public List<Feedback> getFeedbacks(Asset asset)
     {
 

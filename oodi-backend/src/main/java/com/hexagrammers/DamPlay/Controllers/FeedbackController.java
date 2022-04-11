@@ -34,6 +34,9 @@ public class FeedbackController {
 
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
 
+        if (feedbackManager.getFeedback(feedbackBody.getTitle()) != null)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
         User user = userDetails.getUser();
 
         Feedback feedback = new Feedback(feedbackBody.getTitle(),feedbackBody.getBody(),user);
@@ -65,6 +68,10 @@ public class FeedbackController {
     @PutMapping("{id}")
     public ResponseEntity<Feedback> updateFeedback(@PathVariable("id") int feedbackId, @RequestBody() Feedback feedbackBody)
     {
+
+        if (feedbackManager.getFeedback(feedbackBody.getTitle()) != null)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
         Feedback feedback = feedbackManager.getFeedback(feedbackId);
 
         if (feedback == null) {

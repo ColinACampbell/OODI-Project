@@ -11,4 +11,6 @@ public interface FeedbackRepository extends CrudRepository<Feedback,Integer> {
 
     @Override
     void delete(Feedback entity);
+
+    Feedback findByTitle(String title);
 }
