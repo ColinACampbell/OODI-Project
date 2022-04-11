@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NoticeRepository extends CrudRepository<Notice,Integer> {
+    Notice findByTitle(String title);
 }

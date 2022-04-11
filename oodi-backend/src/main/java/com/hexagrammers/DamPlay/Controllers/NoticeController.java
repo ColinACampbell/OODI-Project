@@ -27,6 +27,10 @@ public class NoticeController {
     @PostMapping("")
     ResponseEntity<?> createNotice(@RequestBody HttpNoticeBody noticeHttpBody, Authentication authentication)
     {
+
+        if (noticeManager.getNotice(noticeHttpBody.getTitle()) != null)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
         Notice notice = new Notice(noticeHttpBody.getTitle(), noticeHttpBody.getMessage(), noticeHttpBody.getTime(), user);

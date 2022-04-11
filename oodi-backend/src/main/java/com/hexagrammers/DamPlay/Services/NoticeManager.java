@@ -24,6 +24,12 @@ public class NoticeManager {
         return  noticeRepository.findById(id).get();
     }
 
+    public Notice getNotice(String title)
+    {
+        return  noticeRepository.findByTitle(title);
+    }
+
+
     /* Get All Notice Method*/
     public List<Notice> getAllNotices(){
         return (List<Notice>) noticeRepository.findAll();
