@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MeetingAlertRepository extends CrudRepository<MeetingAlert,Integer> {
+    MeetingAlert findByTitle(String title);
 }

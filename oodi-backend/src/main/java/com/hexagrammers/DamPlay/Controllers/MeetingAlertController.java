@@ -28,6 +28,10 @@ public class MeetingAlertController {
     @PostMapping("")
     public ResponseEntity<MeetingAlert> createMeetingAlert(@RequestBody HttpMeetingAlertBody meetingAlertBody, Authentication authentication)
     {
+
+        if (meetingAlertManager.getMeetingAlert(meetingAlertBody.getTitle()) != null)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
         PrincipalUserDetails userDetails = (PrincipalUserDetails) authentication.getPrincipal();
 
         User user = userDetails.getUser();
