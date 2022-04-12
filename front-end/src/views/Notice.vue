@@ -11,7 +11,7 @@
             <div>
                 <h2>Notices Posted</h2>
                 <div v-if="noticesPosted.length == 0" class="no-view">There are no notices for you to view at the moment.</div>
-                <div class="notice-card notices-posted" v-for="notice in noticesPosted" :key="notice._id">
+                <div class="notice-card notices-posted" v-for="notice in noticesPosted" :key="notice.id">
                     <h3 class="notice-title">{{ notice.title }}</h3>
                     <p class="notice-info">
                         {{ notice.message }}
@@ -24,21 +24,21 @@
             <div v-if="isCreator">
                 <h2>Notices Created</h2>
                 <div v-if="noticesCreated.length == 0" class="no-view">You have not created any new notices.</div>
-                <div class="notice-card" v-for="notice in noticesCreated" :key="notice._id">
-                    <form id="notice-form" method="post" @submit.prevent="handleSubmit(notice._id)">
+                <div class="notice-card" v-for="notice in noticesCreated" :key="notice.id">
+                    <form id="notice-form" method="post" @submit.prevent="handleSubmit(notice.id)">
                         <div>
-                            <label for="title" v-if="notice._id === noticeSelected">Title  <span v-if="error">--{{error}}--</span></label>
-                            <input type="text" name="title" id="title" v-model="notice.title" required :readonly="!(notice._id === noticeSelected)"/>
+                            <label for="title" v-if="notice.id === noticeSelected">Title  <span v-if="error">--{{error}}--</span></label>
+                            <input type="text" name="title" id="title" v-model="notice.title" required :readonly="!(notice.id === noticeSelected)"/>
                         </div>
                         <div>
-                            <label for="information" v-if="notice._id === noticeSelected">Information</label>
-                            <textarea name="information" id="information" cols="30" rows="10" v-model="notice.message" required :readonly="!(notice._id === noticeSelected)"></textarea>
+                            <label for="information" v-if="notice.id === noticeSelected">Information</label>
+                            <textarea name="information" id="information" cols="30" rows="10" v-model="notice.message" required :readonly="!(notice.id === noticeSelected)"></textarea>
                         </div>
                         <div class="buttons">
-                            <div v-if="!(notice._id === noticeSelected)">
-                                <button @click="handleEdit(notice._id)" class="edit-btn">Edit Notice</button>
+                            <div v-if="!(notice.id === noticeSelected)">
+                                <button @click="handleEdit(notice.id)" class="edit-btn">Edit Notice</button>
                             </div>
-                            <div v-if="notice._id === noticeSelected" class="buttons">
+                            <div v-if="notice.id === noticeSelected" class="buttons">
                                 <button @click="handleCancel" id="cancel" class="button">Cancel</button>
                                 <button type="submit" class="change-btn button">Confirm Changes</button>
                             </div>
@@ -71,24 +71,25 @@ export default {
         senderName: "",
         position: store.getters.position,
         error: "",
-        userID: store.getters.userInfo.user._id,
+        userID: store.getters.userInfo.id,
         noticeSelected: "",
         recipients: store.getters.members,
     }
   },
   beforeMount(){
     NoticeService.getNotices(store.getters.token)
-    .then(res => {
-        res.forEach(notice => {
-            let date = new Date(+notice.time)
-            notice.time = date.toDateString()
-            if(notice.sender._id === this.userID){
-                this.noticesCreated.push(notice)
-            }else{
-                this.noticesPosted.push(notice)
-            }
-        });
-    })
+        .then(res => {
+            [...res].forEach(notice => {
+                console.log(notice)
+                let date = new Date(notice.time)
+                notice.time = date.toDateString()
+                if(notice.sender.id === this.userID){
+                    this.noticesCreated.push(notice)
+                }else{
+                    this.noticesPosted.push(notice)
+                }
+            });
+        })
   },
 
   methods: {
@@ -114,7 +115,7 @@ export default {
         if(confirm){
             var newnotice = {title: "", message: ""}
             this.noticesCreated.forEach(notice => {
-                if(notice._id === id){
+                if(notice.id === id){
                     newnotice.title = notice.title
                     newnotice.message = notice.message
                 }
@@ -141,10 +142,11 @@ export default {
         this.noticesCreated = []
         NoticeService.getNotices(store.getters.token)
         .then(res => {
+            console.log(res)
             res.forEach(notice => {
-                let date = new Date(+notice.time)
+                let date = new Date(notice.time)
                 notice.time = date.toDateString()
-                if(notice.sender._id === this.userID){
+                if(notice.sender.id === this.userID){
                     this.noticesCreated.push(notice)
                 }else{
                     this.noticesPosted.push(notice)
@@ -231,7 +233,7 @@ button:disabled{
 
 input, textarea{
     display: block;
-    width: 48rem;
+    width: 90%;
     border: 1px solid #d5c7ff;
     border-radius: 8px;
     padding: 0 10px;

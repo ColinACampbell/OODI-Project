@@ -1,6 +1,9 @@
 package com.hexagrammers.DamPlay.Controllers;
 
 import com.hexagrammers.DamPlay.Models.Http.HttpNoticeBody;
+
+import java.util.List;
+
 import com.hexagrammers.DamPlay.Models.Notice;
 import com.hexagrammers.DamPlay.Models.PrincipalUserDetails;
 import com.hexagrammers.DamPlay.Models.User;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/notice")
+@RequestMapping("/api/notice")
 public class NoticeController {
 
     @Autowired

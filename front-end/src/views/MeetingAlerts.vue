@@ -11,37 +11,37 @@
             <div v-if="isCreator">
                 <h2>Meetings Created</h2>
                 <div v-if="alertsCreated.length == 0" class="no-view">You have not created any new meeting alerts.</div>
-                <form action="post" v-for="alert in alertsCreated" :key="alert._id" @submit.prevent="handleSubmit(alert._id)">
+                <form action="post" v-for="alert in alertsCreated" :key="alert.id" @submit.prevent="handleSubmit(alert.id)">
                     <div class="input">
                         <label for="title">Title  <span v-if="error">--{{error}}--</span></label>
-                        <input type="text" name="title" id="title" v-model="alert.title" required :readonly="!(alert._id === alertSelected)"/>
+                        <input type="text" name="title" id="title" v-model="alert.title" required :readonly="!(alert.id === alertSelected)"/>
                     </div>
                     <div class="input">
                         <label for="dateTime">Meeting Date and Time</label>
-                        <input type="datetime-local" name="dateTime" id="dateTime" v-model="alert.date" required :readonly="!(alert._id === alertSelected)">
+                        <input type="datetime-local" name="dateTime" id="dateTime" v-model="alert.date" required :readonly="!(alert.id === alertSelected)">
                     </div>
                     <div class="input">
                         <label for="link">Link to Meeting</label>
-                        <input name="link" id="link" type="url" v-model="alert.meetingLink" :readonly="!(alert._id === alertSelected)"/>
+                        <input name="link" id="link" type="url" v-model="alert.meetingLink" :readonly="!(alert.id === alertSelected)"/>
                     </div>
                     <div class="input">
                         <label for="recipient">Attendee(s)</label>
-                        <select name="recipient" id="recipient" v-model="alert.attendees" multiple="true" required v-if="isEditable && alert._id === alertSelected">
+                        <select name="recipient" id="recipient" v-model="alert.attendees" multiple="true" required v-if="isEditable && alert.id === alertSelected">
                             <option v-for="option in recipients" v-bind:value="option" v-bind:key="option.name">
                                 {{option.name}}
                             </option>
                         </select>
                         <div class="names">
-                            <div v-for="attendee in alert.attendees" :key="attendee.name" class="name">
-                                {{ attendee.name }}
+                            <div v-for="attendee in alert.attendees" :key="attendee?.attendee?.name || attendee?.name" class="name">
+                                {{ attendee?.attendee?.name || attendee?.name }}
                             </div>
                         </div>
                     </div>
                     <div class="buttons">
-                        <div v-if="!(alert._id === alertSelected)" class="buttons">
-                            <button @click="handleEdit(alert._id)" class="edit-btn">Edit Meeting Alert</button>
+                        <div v-if="!(alert.id === alertSelected)" class="buttons">
+                            <button @click="handleEdit(alert.id)" class="edit-btn">Edit Meeting Alert</button>
                         </div>
-                        <div v-if="alert._id === alertSelected" class="buttons">
+                        <div v-if="alert.id === alertSelected" class="buttons">
                             <button @click="handleCancel" id="cancel" class="button">Cancel</button>
                             <button type="submit" class="change-btn button">Confirm Changes</button>
                         </div>
@@ -51,7 +51,7 @@
             <div>
                 <h2>Meetings Posted</h2>
                 <div v-if="alertsPosted.length == 0" class="no-view">There are no meeting alerts for you at the moment.</div>
-                <div v-for="alert in alertsPosted" :key="alert._id" class="meeting">
+                <div v-for="alert in alertsPosted" :key="alert.id" class="meeting">
                     <div>
                         <p class="label">Title</p>
                         <p>{{ alert.title }}</p>
@@ -99,7 +99,7 @@ export default {
         isEditable: false,
         isCreator: store.getters.position == "Coach" || store.getters.position == "Chief Executive Officer",
         userName: store.getters.userName,
-        userID: store.getters.userInfo.user._id,
+        userID: store.getters.userInfo.id,
         error: "",
         recipients: store.getters.members,
     }
@@ -107,13 +107,14 @@ export default {
   beforeMount(){
     MeetingService.getMeetingAlerts(store.getters.token)
     .then(res => {
+        console.log(res)
         res.forEach(alert => {
             alert.attendeeNames = alert.attendees
-            if(alert.sender._id === this.userID){
+            if(alert.sender.id === this.userID){
                 this.alertsCreated.push(alert)
             }else{
                 alert.attendees.forEach(attendee => {
-                    if(attendee._id === this.userID){
+                    if(attendee.id === this.userID){
                         this.alertsPosted.push(alert)
                     }
                 })
@@ -152,12 +153,12 @@ export default {
                 sender: this.userID
             }
             this.alertsCreated.forEach(alert => {
-                if(alert._id === id){
+                if(alert.id === id){
                     newalert.title = alert.title
                     newalert.meetingLink = alert.meetingLink
                     newalert.date = alert.date
                     alert.attendees.forEach(recipient => {
-                        newalert.attendees.push(recipient._id)
+                        newalert.attendees.push(recipient.id)
                     })
                 }
             })
@@ -180,8 +181,9 @@ export default {
         this.alertsCreated = []
         MeetingService.getMeetingAlerts(store.getters.token)
             .then(res => {
+                console.log(res)
                 res.forEach(alert => {
-                    if(alert.sender._id === this.userID){
+                    if(alert.sender.id === this.userID){
                         this.alertsCreated.push(alert)
                     }else{
                         this.alertsPosted.push(alert)
@@ -265,7 +267,8 @@ button:disabled{
 }
 
 input, select{
-    width: 48rem;
+    width: 90%;
+    /* width: 48rem; */
     border: 1px solid #d5c7ff;
     border-radius: 8px;
     padding: 0 10px;

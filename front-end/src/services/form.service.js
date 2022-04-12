@@ -48,7 +48,7 @@ export default {
     },
     async processNotice(notice, token){
 
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/notice/`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/notice/`,
             {
                 method: "POST",
                 body: JSON.stringify(notice),
@@ -69,7 +69,7 @@ export default {
     },
     async processMeetingAlert(meetingAlert, token){
 
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/meeting-alert/`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/meeting-alert/`,
             {
                 method: "POST",
                 body: JSON.stringify(meetingAlert),

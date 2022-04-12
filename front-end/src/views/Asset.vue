@@ -23,8 +23,15 @@
                 <div>
                     <label for="status">Asset Status</label>
                     <select name="status" id="status" v-model="status" required v-if="changeStatus || isEditable">
-                        <option v-for="option in options" v-bind:value="option" v-bind:key="option" :selected="option === status">
-                            {{option}}
+                        <option 
+                            v-for="option in options.length" 
+                            v-bind:value="options[option]" 
+                            v-bind:key="option" 
+                            :selected="options[option] === status"
+                            :disabled="option < options.indexOf(status)"
+                            
+                        >
+                            {{options[option]}}
                         </option>
                     </select>
                     <div v-if="!isEditable && !changeStatus" :class="status">{{ status }}</div>
@@ -67,16 +74,16 @@
             <div v-if="assetFeedbacks.length == 0" class="no-view">There are no feedbacks on this asset.</div>
             <div v-for="feedback in assetFeedbacks" :key="feedback.id">
                 <div class="feedback-content">
-                    <p class="message">{{ feedback.message }}</p>
-                    <p class="msg-user">~{{ feedback.postedBy.name }}</p>
+                    <p class="message">{{ feedback.body }}</p>
+                    <p class="msg-user">~{{ feedback.name }}</p>
                     <div class="btn">
                         <button @click="handleClick(feedback.id)" class="reply-btn">Reply</button>
                     </div>
                 </div>
                 <ul class="replies">
-                    <li class="reply" v-for="reply in feedback.replies" :key="reply.postedBy">
-                        <p class="message">{{ reply.message }}</p>
-                        <p class="msg-user">~{{ reply.postedBy.name }}</p>
+                    <li class="reply" v-for="reply in feedback.replies" :key="reply.id">
+                        <p class="message">{{ reply.body }}</p>
+                        <p class="msg-user">~{{ reply.name }}</p>
                     </li>
                     <li v-if="showReplyInput && replySelected === feedback.id">
                         <form id="create-feedback-form" method="post" @submit.prevent="handleFeedbackReply(feedback.id)">
@@ -143,6 +150,7 @@ export default {
   beforeMount(){
     AssetService.getAsset(store.getters.token, this.assetID)
         .then(res => {
+            // console.log(res)
             this.title = res.title
             this.description = res.description
             this.status = res.status.replace(/(\w)(\w*)/g,(_, firstChar, rest) => firstChar + rest.toLowerCase())
@@ -163,12 +171,12 @@ export default {
 
     AssetService.getFeedbacks(store.getters.token, this.assetID)
     .then(res => {
-        console.log(res)
-        // res.forEach(feedback =>{
-        //     if(feedback.asset.id === this.assetID){
-        //         this.assetFeedbacks.push(feedback)
-        //     }
-        // })
+        res.forEach(feedback =>{
+            console.log(feedback)
+            // if(feedback.asset.id === this.assetID){
+                this.assetFeedbacks.push(feedback)
+            // }
+        })
     })
     
   },
@@ -247,7 +255,7 @@ export default {
     },
     
     handleFeedback(){
-       let feedback = { message: this.feedback, title: "", assetId:this.assetID };
+       let feedback = { body: this.feedback, title: "", assetID:this.assetID };
        let wordCheck = this.feedback.split(" ")
         if(wordCheck.length > 500){
             this.error = "Words exceed 500"
@@ -257,6 +265,7 @@ export default {
             .then(res => {
                 this.error = ""
                     if(res === "Successful"){
+                        this.feedback = ""
                         this.setFeedbacks()
                     } else {
                         alert("Feedback was not posted")
@@ -269,28 +278,27 @@ export default {
     },
 
     setFeedbacks(){
-        AssetService.getFeedbacks(store.getters.token)
+        AssetService.getFeedbacks(store.getters.token, this.assetID)
         .then(res => {
             this.assetFeedbacks = []
             res.forEach(feedback =>{
-                if(feedback.asset.id === this.assetID){
-                    this.assetFeedbacks.push(feedback)
-                }
+                this.assetFeedbacks.push(feedback)
             })
         })
     },
 
     handleFeedbackReply(id){
-        let reply = { message : this.feedbackReply }
+        let reply = { body : this.feedbackReply, feedbackID: id }
         let wordCheck = this.feedbackReply.split(" ")
         if(wordCheck.length > 500){
             this.errorreply = "Words exceed 500"
         }
         else{
-            AssetService.postFeedbackReply(reply, store.getters.token, id)
+            AssetService.postFeedbackReply(reply, store.getters.token)
             .then(res =>{
                 this.errorreply = ""
                 if(res === "Successful"){
+                    this.feedbackReply = ""
                     this.setFeedbacks()
                 }else{
                     alert("Feedback reply was not posted")
@@ -338,7 +346,7 @@ textarea:read-only{
 #create-feedback-form{
      border: 1px solid rgba(0, 0,0, 0.25);
      border-radius: 10px;
-     padding: 5px 10px;
+     padding: 0 10px;
 }
 
 input, select, textarea{
@@ -440,7 +448,11 @@ select[multiple] {
 .feedback-content{
     border: 1px solid rgba(0, 0,0, 0.25);
     border-radius: 8px;
-    padding: 10px;
+    padding: 4px 10px;
+}
+
+.feedback-content p{
+    margin: 6px 0;
 }
 
 p{
@@ -465,13 +477,15 @@ p{
 
 li{
     list-style: none;
-    margin: 5px 0;
+    margin: 8px 0;
 }
+
 .reply{
     background: rgba(0, 0,0, 0.05);
-    padding: 10px;
+    padding: 1px 8px;
     border-radius: 10px ;
 }
+
 
 .feedback-header{
     font-weight: bold;

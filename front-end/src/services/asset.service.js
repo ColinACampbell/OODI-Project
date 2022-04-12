@@ -104,6 +104,7 @@ export default {
     },
 
     async getFeedbacks(token, id){
+        console.log(id)
         let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/${id}`,
         {
             method: "GET",
@@ -113,17 +114,16 @@ export default {
             },
             
         })
-        console.log(await res.json())
-        // if(res.status === 200){
-        //     return await res.json()
-        // }
+        if(res.status === 200){
+            return await res.json()
+        }
         return "Failed to fetch"
        
     },
 
-    async postFeedbackReply(reply, token, id){
+    async postFeedbackReply(reply, token){
 
-        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/feedback/${id}/reply`,
+        let res = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/feedback/reply`,
             {
                 method: "POST",
                 body: JSON.stringify(reply),
@@ -135,7 +135,7 @@ export default {
             }
         )
             
-        if(res.status === 200){
+        if(res.status === 201){
             return "Successful"
         }
 

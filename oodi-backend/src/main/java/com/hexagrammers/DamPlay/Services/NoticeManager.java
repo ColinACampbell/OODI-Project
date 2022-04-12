@@ -4,6 +4,7 @@ import com.hexagrammers.DamPlay.Models.Notice;
 import com.hexagrammers.DamPlay.Repositories.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 import java.util.List;
 

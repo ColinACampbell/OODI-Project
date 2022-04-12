@@ -140,6 +140,13 @@ export default {
 
       if(confirm){
         Asset.deleteAsset(store.getters.token, id)
+          .then(res => {
+            if(res){
+              this.setAssets()
+            }else{
+              alert("Failed to load delete asset. Please try again.")
+            }
+          })
       }else{
         console.log("error")
       }
