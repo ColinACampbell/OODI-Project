@@ -38,11 +38,11 @@
                 </div>
                 <div>
                     <label for="recipient">Recipient(s)</label>
-                    <select name="positions" id="positions" v-model="receiverNames" multiple="true" required v-if="isEditable">
+                    <!-- <select name="positions" id="positions" v-model="receiverNames" multiple="true" required v-if="isEditable">
                         <option v-for="option in recipients" v-bind:value="option.name" v-bind:key="option">
                             {{option.name}}
                         </option>
-                    </select>
+                    </select> -->
                     <div class="names">
                         <div v-for="name in receiverNames" :key="name" class="name">
                             {{ name }}
